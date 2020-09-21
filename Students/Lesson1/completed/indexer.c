@@ -78,7 +78,6 @@ tree read_data()
         int count_line = 0;
 
         a = stop_word("stopw.txt");
-        int i = strlen_arr("stopw.txt");
         while(fgets(str,120,pt)!=NULL)
             {
                 count_line++;
