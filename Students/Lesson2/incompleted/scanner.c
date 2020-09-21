@@ -59,6 +59,18 @@ Token* getToken(void) {
     // ....
     // TODO
     // ....
+  case CHAR_MINUS:
+        token = makeToken(SB_MINUS, lineNo, colNo);
+        readChar();
+        return token;
+  case CHAR_TIMES:
+        token = makeToken(SB_TIMES, lineNo, colNo);
+        readChar();
+        return token;
+  case CHAR_SEMICOLON:
+        token = makeToken(SB_SEMICOLON, lineNo, colNo);
+        readChar();
+        return token;
   default:
     token = makeToken(TK_NONE, lineNo, colNo);
     error(ERR_INVALIDSYMBOL, lineNo, colNo);
