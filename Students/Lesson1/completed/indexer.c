@@ -37,6 +37,19 @@ int strlen_arr(char *file_name)
             }
         return i;
     }
+// int* check_duplicate(int *a, int l)
+//     {
+//         int i;
+//         int* b;
+//         int count = 1;
+//         for(i=1;i<=l;i++)
+//             if(a[i]!=a[i-1])
+//                 {
+//                     b[count] = a[i];
+//                     count++
+//                 }
+//         return b;
+//     }
 
 int check_stopw(char** a, char *word)
     {
@@ -68,8 +81,8 @@ tree read_data()
         int i = strlen_arr("stopw.txt");
         while(fgets(str,120,pt)!=NULL)
             {
-                printf("%d ",++count_line);
-                printf("%s",str);
+                count_line++;
+                // printf("%s",str);
                 token1 = strtok(str,c1);
                 token2 = strtok(token1,c2);
                 while(token2 != NULL)
@@ -100,5 +113,5 @@ int main()
     {
         tree t =createNullTree();
         t = read_data();
-        // breadth_first_search(t);
+        breadth_first_search(t);
     }
