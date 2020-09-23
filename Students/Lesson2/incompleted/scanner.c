@@ -22,7 +22,7 @@ extern CharCode charCodes[];
 /***************************************************************/
 
 void skipBlank() {
-  while(currentChar != EOF && charCodes[currentChar] != CHAR_SPACE)
+  while(currentChar != EOF && charCodes[currentChar] == CHAR_SPACE)
     {
       readChar();
     }
@@ -51,10 +51,10 @@ void skipComment() {
 
 Token* readIdentKeyword(void) {
   int count = 0;
-  Token *token = makeToken(TK_IDENT, lineNo, colNo);
+  Token* token = makeToken(TK_IDENT, lineNo, colNo);
   while (charCodes[currentChar] == CHAR_LETTER || charCodes[currentChar] == CHAR_DIGIT)
     {
-      token->string[count] == currentChar;
+      token->string[count] = currentChar;
       count++;
       readChar();
     }
@@ -76,12 +76,74 @@ Token* readIdentKeyword(void) {
 }
 
 Token* readNumber(void) {
-  // TODO
+  int count = 0;
+  Token *token = makeToken(TK_NUMBER, lineNo, colNo);
+  while(charCodes[currentChar] == CHAR_DIGIT)
+    {
+      token->string[count] = currentChar;
+      count++;
+      readChar();
+    }
+  token->string[count] = '\0';
+  token->value = atoi(token->string);
+  return token;
 }
 
 Token* readConstChar(void) {
-  // TODO
+  Token* token = makeToken(TK_CHAR, lineNo, colNo);
+  readChar();
+
+  if (currentChar == -1) { // End of File
+    error(ERR_INVALIDCHARCONSTANT, token->lineNo, token->colNo);
+  } else {
+	switch(charCodes[currentChar]) {
+	// Escape character for Single Quote:
+	case CHAR_SINGLEQUOTE:
+		// Read next character
+		readChar();
+
+		if (charCodes[currentChar] == CHAR_SINGLEQUOTE) {
+		    token->string[0] = currentChar;
+
+		    readChar();
+		    if (charCodes[currentChar] == CHAR_SINGLEQUOTE) {
+		        token->string[1] = '\0';
+
+		        readChar();
+		        return token;
+		    } else {
+		        error(ERR_INVALIDCHARCONSTANT, token->lineNo, token->colNo);
+		    }
+
+		} else {
+			error(ERR_INVALIDCHARCONSTANT, token->lineNo, token->colNo);
+		}
+		break;
+	default:
+	    // Add the character to token string
+        token->string[0] = currentChar;
+
+		// Read next character
+		readChar();
+
+		switch(charCodes[currentChar]) {
+		case CHAR_SINGLEQUOTE:
+			// End token
+			token->string[1] = '\0';
+
+			readChar();
+			return token;
+		default:
+			error(ERR_INVALIDCHARCONSTANT, token->lineNo, token->colNo);
+			break;
+		}
+		break;
+	}
+
+  }
+  return token;
 }
+
 
 Token* getToken(void) {
   Token *token;
@@ -113,6 +175,10 @@ Token* getToken(void) {
   case CHAR_SLASH:
         /// \ ///
         token = makeToken(SB_SLASH, lineNo, colNo);
+        readChar();
+        return token;
+  case CHAR_COMMA:
+        token = makeToken(SB_COMMA, lineNo, colNo);
         readChar();
         return token;
   case CHAR_LT:
@@ -151,10 +217,6 @@ Token* getToken(void) {
             //Not equal
             token->tokenType = SB_NEQ;
           }
-        return token;
-  case CHAR_COMMA:
-        token = makeToken(SB_COMMA, lineNo, colNo);
-        readChar();
         return token;
   case CHAR_PERIOD:
         token = makeToken(SB_PERIOD, lineNo, colNo);
@@ -280,7 +342,7 @@ int scan(char *fileName) {
 
 /******************************************************************/
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[] ) {
   if (argc <= 1) {
     printf("scanner: no input file.\n");
     return -1;
@@ -291,6 +353,8 @@ int main(int argc, char *argv[]) {
     return -1;
   }
     
+  Token * token = getToken();
+  printToken(token);
   return 0;
 }
 
