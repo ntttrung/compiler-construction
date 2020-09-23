@@ -22,7 +22,10 @@ extern CharCode charCodes[];
 /***************************************************************/
 
 void skipBlank() {
-  // TODO
+  while(currentChar != EOF && charCodes[currentChar] != CHAR_SPACE)
+    {
+      readChar();
+    }
 }
 
 void skipComment() {
@@ -39,7 +42,7 @@ void skipComment() {
             if( flag == 1)
               {
                 flag = 2;
-                readChar()
+                readChar();
               }
             break;
         }
@@ -47,7 +50,29 @@ void skipComment() {
 }
 
 Token* readIdentKeyword(void) {
-  // TODO
+  int count = 0;
+  Token *token = makeToken(TK_IDENT, lineNo, colNo);
+  while (charCodes[currentChar] == CHAR_LETTER || charCodes[currentChar] == CHAR_DIGIT)
+    {
+      token->string[count] == currentChar;
+      count++;
+      readChar();
+    }
+  token->string[count] ='\0';
+  //check length
+  if(count > MAX_IDENT_LEN)
+    {
+      error(ERR_IDENTTOOLONG, lineNo, colNo - count);
+    }
+  else 
+    {
+      TokenType type = checkKeyword(token->string);
+      if(type != TK_NONE)
+        {
+          token->tokenType = type;
+        }
+    }
+  return token;
 }
 
 Token* readNumber(void) {
@@ -138,7 +163,7 @@ Token* getToken(void) {
           {
             //right parenthesis
             token->tokenType = SB_RSEL;
-            readChar()
+            readChar();
           }
         return token;
   case CHAR_COLON:
