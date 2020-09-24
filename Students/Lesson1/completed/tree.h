@@ -2,12 +2,18 @@
 #define _TREE_H_
  
 // typedef int element_t;
+typedef struct coor
+  {
+    int lin;
+    int col;
+  }
+coor_t;
 
 typedef struct element
   {
     char name[20];
     int time;
-    int appea[10];
+    coor_t appea[20];
   }
 element_t;
  

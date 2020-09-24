@@ -326,7 +326,7 @@ void breadth_first_search(tree Root){
         {
           printf("%-20s\t%d\t",arr[i].data.name,arr[i].data.time);
           for(h=1;h<=arr[i].data.time;h++)
-            printf("%d\t",arr[i].data.appea[h]);
+            printf("(%d,%d)\t",arr[i].data.appea[h].lin,arr[i].data.appea[h].col);
           printf("\n");
         }
     printf("\n");

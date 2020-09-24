@@ -2,8 +2,30 @@
 #include <stdlib.h>
 #include <string.h>
 #include "tree.h"
+#include <ctype.h>
 
 
+int read_col(char *sour, char *str, int begi)
+    {
+        int i,j;
+        i = begi;
+        int flag = 2;
+        while(i<strlen(sour))
+            {
+                for(j=0;j<strlen(str);j++)
+                    {
+                        if(tolower(sour[i+j]) != tolower(str[j]))
+                            {
+                                flag = 0;
+                                break;
+                            }
+                        else flag = 1;
+                    }
+                if(flag == 1) break;
+                i++;
+            }
+        return i+1;
+    }
 
 char** stop_word(char *file_name)
     {
@@ -62,6 +84,7 @@ int check_stopw(char** a, char *word)
         return 0;
     }
 
+
 tree read_data()
     {
         char** a;
@@ -73,33 +96,40 @@ tree read_data()
         char c2[2] = " ";
         char* token1;
         char* token2;
+        char s1[120];
         tree p;
         element_t q;
         int count_line = 0;
-
+        char* tmp;
         a = stop_word("stopw.txt");
         while(fgets(str,120,pt)!=NULL)
             {
                 count_line++;
-                // printf("%s",str);
+                strcpy(s1,str);
                 token1 = strtok(str,c1);
                 token2 = strtok(token1,c2);
                 while(token2 != NULL)
                     {
-                        if(check_stopw(a,token2) == 0)
+                        if(check_stopw(a,token2) == 0 && isdigit(token2[0]) ==0)
                             {
                                 if(searchBST(t,token2) == NULL)
                                     {
                                         strcpy(q.name,token2);
                                         q.time = 1;
-                                        q.appea[q.time] = count_line;
+                                        q.name[0] = tolower(q.name[0]);
+                                        q.appea[q.time].lin = count_line;
+                                        q.appea[q.time].col = read_col(s1, q.name, 0);
                                         t = insertBST(t,q);
                                     }
                                 else
                                     {
                                         p = searchBST(t,token2);
                                         p->data.time++;
-                                        p->data.appea[p->data.time] = count_line;
+                                        if(p->data.appea[p->data.time].lin == count_line)
+                                            p->data.appea[p->data.time].col = read_col(s1, p->data.name, p->data.appea[p->data.time-1].col+2);
+                                        else p->data.appea[p->data.time].col = read_col(s1, p->data.name,0);
+                                        p->data.appea[p->data.time].lin = count_line;
+                                        
                                     }
                             }
                         token2 = strtok(NULL,c2);
@@ -113,4 +143,8 @@ int main()
         tree t =createNullTree();
         t = read_data();
         breadth_first_search(t);
+        // char *sour = "At least 30 people were killed and 110 wounded Friday afternoon in a suicide bombing in Yusifiya,";
+        // char *str = "bombing";
+        // int i = read_col(sour, str, 0);
+        // printf("%d",i);
     }
