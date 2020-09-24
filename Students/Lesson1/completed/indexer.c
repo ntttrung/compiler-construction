@@ -110,7 +110,7 @@ tree read_data()
                 token2 = strtok(token1,c2);
                 while(token2 != NULL)
                     {
-                        if(check_stopw(a,token2) == 0 && isdigit(token2[0]) ==0)
+                        if(check_stopw(a,token2) == 0 && isdigit(token2[0]) ==0 && token2!="a")
                             {
                                 if(searchBST(t,token2) == NULL)
                                     {
@@ -134,7 +134,7 @@ tree read_data()
                             }
                         token2 = strtok(NULL,c2);
                     }
-            }
+            }  
         return t;
     }
 
@@ -143,8 +143,4 @@ int main()
         tree t =createNullTree();
         t = read_data();
         breadth_first_search(t);
-        // char *sour = "At least 30 people were killed and 110 wounded Friday afternoon in a suicide bombing in Yusifiya,";
-        // char *str = "bombing";
-        // int i = read_col(sour, str, 0);
-        // printf("%d",i);
     }
