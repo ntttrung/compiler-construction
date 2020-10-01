@@ -1,0 +1,5 @@
+Program Example1; (* Example 1 *)
+VAR A: CHAR;
+Begin
+    A := ''
+End. (* Example 1 *)
