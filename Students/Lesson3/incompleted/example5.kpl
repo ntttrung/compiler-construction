@@ -1,6 +1,7 @@
-Program Example2; (* Factorial *)
+Program Example5; (* Factorial *)
    
 Var n : Integer;
+    i 1 : char;
 
 Function F(n : Integer) : Integer;
   Begin

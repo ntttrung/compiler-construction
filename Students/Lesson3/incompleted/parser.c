@@ -82,57 +82,145 @@ void compileBlock5(void) {
 }
 
 void compileConstDecls(void) {
-  // TODO
+  assert("Parsing subconstants ....");
+  while(lookAhead->tokenType == TK_IDENT)
+    compileConstDecl();
+  assert("Subconstants parsed!")
 }
 
 void compileConstDecl(void) {
-  // TODO
+  assert("Parsing constant ....");
+  eat(TK_IDENT);
+  eat(SB_EQ);
+  compileConstant();
+  eat(SB_SEMICOLON);
+  assert("Constant parsed!");
 }
 
 void compileTypeDecls(void) {
-  // TODO
+  assert("Parsing subtypes ....");
+  while(lookAhead->tokenType == TK_IDENT)
+    compileTypeDecl();
+  assert("Subtypes parsed!");
 }
 
 void compileTypeDecl(void) {
-  // TODO
+  assert("Parsing a type ....");
+  eat(TK_IDENT);
+  eat(SB_EQ);
+  compileType();
+  eat(SB_SEMICOLON);
+  assert("Type parsed!");
 }
 
 void compileVarDecls(void) {
-  // TODO
+  assert("Parsing variables ....");
+  while(lookAhead->tokenType == TK_IDENT)
+    compileVarDecl();
+  assert("Variables parsed!");
 }
 
 void compileVarDecl(void) {
-  // TODO
+  assert("Parsing a variable ....");
+  eat(TK_IDENT);
+  eat(SB_COLON);
+  compileType();
+  eat(SB_SEMICOLON);
+  assert("A variable parsed!");
 }
 
 void compileSubDecls(void) {
-  assert("Parsing subtoutines ....");
-  // TODO
-  assert("Subtoutines parsed ....");
+  assert("Parsing subroutines ....");
+  if(lookAhead->tokenType == KW_FUNCTION)
+    {
+      compileFuncDecl();
+      compileSubDecls();
+    }
+  else if(lookAhead->tokenType == KW_PROCEDURE)
+          {
+            compileProcDecl();
+            compileSubDecls();
+          }
+  assert("Subroutines parsed ....");
 }
 
 void compileFuncDecl(void) {
   assert("Parsing a function ....");
-  // TODO
+  eat(KW_FUNCTION);
+  eat(TK_IDENT);
+  compileParams();
+  eat(SB_COLON);
+  compileBasicType();
+  eat(SB_SEMICOLON);
+  compileBlock();
+  eat(SB_SEMICOLON);
   assert("Function parsed ....");
 }
 
 void compileProcDecl(void) {
   assert("Parsing a procedure ....");
-  // TODO
+  eat(KW_PROCEDURE);
+  eat(TK_IDENT);
+  compileParams();
+  eat(SB_SEMICOLON);
+  compileBlock();
+  eat(SB_SEMICOLON);
   assert("Procedure parsed ....");
 }
 
 void compileUnsignedConstant(void) {
-  // TODO
+  switch(lookAhead->tokenType)
+    {
+      case TK_NUMBER:
+        eat(TK_NUMBER);
+        break;
+      case TK_CHAR:
+        eat(TK_CHAR);
+        break;
+      case TK_IDENT:
+        eat(TK_IDENT);
+        break;
+      default:
+        error(ERR_INVALIDCONSTANT, lookAhead->lineNo, lookAhead->colNo);
+        break;
+    }
 }
 
 void compileConstant(void) {
-  // TODO
+  assert("Parsing a constant ....");
+  switch(lookAhead->tokenType)
+    {
+      case SB_PLUS:
+        eat(SB_PLUS);
+        compileConstant2();
+        break;
+      case SB_MINUS:
+        eat(SB_MINUS);
+        compileConstant2();
+        break;
+      case TK_CHAR:
+        eat(TK_CHAR);
+        break;
+      default:
+        compileConstant2();
+        break;
+    }
+  assert("Constant parsed!");
 }
 
 void compileConstant2(void) {
-  // TODO
+  switch(lookAhead->tokenType)
+    {
+      case TK_NUMBER:
+        eat(TK_NUMBER);
+        break;
+      case TK_IDENT:
+        eat(TK_IDENT);
+        break;
+      default:
+        error(ERR_INVALIDCONSTANT, lookAhead->lineNo, lookAhead->colNo);
+        break;
+    }
 }
 
 void compileType(void) {
@@ -140,7 +228,18 @@ void compileType(void) {
 }
 
 void compileBasicType(void) {
-  // TODO
+  switch(lookAhead->tokenType)
+    {
+      case KW_INTEGER:
+        eat(KW_INTEGER);
+        break;
+      case KW_CHAR:
+        eat(KW_CHAR);
+        break;
+      default:
+        error(ERR_INVALIDBASICTYPE, lookAhead->lineNo, lookAhead->colNo);
+        break;
+    }
 }
 
 void compileParams(void) {
