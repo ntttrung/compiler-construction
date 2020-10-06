@@ -298,4 +298,3 @@ void printToken(Token *token) {
   case SB_RSEL: printf("SB_RSEL\n"); break;
   }
 }
-

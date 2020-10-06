@@ -4,12 +4,15 @@
  * @version 1.0
  */
 
+#include <stdio.h>
 #include <stdlib.h>
 
 #include "reader.h"
 #include "scanner.h"
 #include "parser.h"
 #include "error.h"
+#include "charcode.h"
+#include "token.h"
 
 Token *currentToken;
 Token *lookAhead;
@@ -85,7 +88,7 @@ void compileConstDecls(void) {
   assert("Parsing subconstants ....");
   while(lookAhead->tokenType == TK_IDENT)
     compileConstDecl();
-  assert("Subconstants parsed!")
+  assert("Subconstants parsed!");
 }
 
 void compileConstDecl(void) {
@@ -278,7 +281,7 @@ void compileParams(void) {
         break;
       default:
         error(ERR_INVALIDPARAM, lookAhead->lineNo, lookAhead->colNo);
-        break
+        break;
     }
 }
 
@@ -358,12 +361,10 @@ void compileStatement(void) {
   case KW_FOR:
     compileForSt();
     break;
-    // EmptySt needs to check FOLLOW tokens
   case SB_SEMICOLON:
   case KW_END:
   case KW_ELSE:
     break;
-    // Error occurs
   default:
     error(ERR_INVALIDSTATEMENT, lookAhead->lineNo, lookAhead->colNo);
     break;
@@ -581,19 +582,88 @@ void compileExpression3(void) {
 }
 
 void compileTerm(void) {
-  // TODO
+  compileFactor();
+  compileTerm2();
 }
 
 void compileTerm2(void) {
-  // TODO
+  switch(lookAhead->tokenType)
+    {
+      case SB_TIMES:
+        eat(SB_TIMES);
+        compileFactor();
+        compileTerm2();
+        break;
+      case SB_SLASH:
+        eat(SB_SLASH);
+        compileFactor();
+        compileTerm2();
+        break;
+      case SB_PLUS:
+      case SB_MINUS:
+      case KW_END:
+      case KW_ELSE:
+      case KW_TO:
+      case KW_DO:
+      case SB_COMMA:
+      case SB_EQ:
+      case SB_NEQ:
+      case SB_LE:
+      case SB_LT:
+      case SB_GE:
+      case SB_GT:
+      case SB_RPAR:
+      case SB_RSEL:
+      case KW_THEN:
+      case SB_SEMICOLON:
+          break;
+      default:
+        error(ERR_INVALIDTERM, lookAhead->lineNo, lookAhead->colNo);
+        break;
+    }
 }
 
 void compileFactor(void) {
-  // TODO
+  switch(lookAhead->tokenType)
+    {
+      case TK_NUMBER:
+      case TK_CHAR:
+        compileUnsignedConstant();
+        break;
+      case SB_LPAR:
+        eat(SB_LPAR);
+        compileExpression();
+        eat(SB_RPAR);
+        break;
+      case TK_IDENT:
+        {
+          eat(TK_IDENT);
+          switch(lookAhead->tokenType)
+            {
+              case SB_LSEL:
+                compileIndexes();
+                break;
+              case SB_LPAR:
+                compileArguments();
+                break;
+              default:
+                break;
+            }
+          break;
+        }
+      default:
+        error(ERR_INVALIDFACTOR, lookAhead->lineNo, lookAhead->colNo);
+        break;
+    }
 }
 
 void compileIndexes(void) {
-  // TODO
+    while(lookAhead->tokenType == SB_LSEL)
+      {
+        eat(SB_LSEL);
+        compileExpression();
+        eat(SB_RSEL);
+      }
 }
 
 int compile(char *fileName) {
@@ -610,4 +680,13 @@ int compile(char *fileName) {
   closeInputStream();
   return IO_SUCCESS;
 
+}
+
+int main(int argc, char *argv[] ) {
+  if (argc <= 1) {
+    printf("scanner: no input file.\n");
+    return -1;
+  }
+  compile(argv[1]);
+  return 0;
 }

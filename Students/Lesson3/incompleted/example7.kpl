@@ -1,6 +1,6 @@
 PROGRAM  EXAMPLE4;  (* Example 4 *)
 CONST MAX = 10;
-TYPE T = INTEGER;
+TYPE T = EINTEGER;
 VAR  A : ARRAY(. 10 .) OF T;
      N : INTEGER;
      CH : CHAR;

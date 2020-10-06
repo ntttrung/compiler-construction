@@ -326,19 +326,20 @@ int scan(char *fileName) {
 /******************************************************************/
 
 int main(int argc, char *argv[] ) {
-  if (argc <= 1) {
-    printf("scanner: no input file.\n");
-    return -1;
-  }
+  // if (argc <= 1) {
+  //   printf("scanner: no input file.\n");
+  //   return -1;
+  // }
 
-  if (scan(argv[1]) == IO_ERROR) {
-    printf("Can\'t read input file!\n");
-    return -1;
-  }
+  // if (scan(argv[1]) == IO_ERROR) {
+  //   printf("Can\'t read input file!\n");
+  //   return -1;
+  // }
     
-  Token * token = getToken();
-  printToken(token);
-  return 0;
+  // Token * token = getToken();
+  // printToken(token);
+  // return 0;
+  printf(keywordEq("KW_INTERGER", "INTERGER"))
 }
 
 
