@@ -1,5 +1,5 @@
 PROGRAM  EXAMPLE4;  (* Example 4 *)
-CONST MAX = 10;
+CONST MAX = .1;
 TYPE T = EINTEGER;
 VAR  A : ARRAY(. 10 .) OF T;
      N : INTEGER;

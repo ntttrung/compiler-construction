@@ -177,6 +177,9 @@ void compileUnsignedConstant(void) {
       case TK_NUMBER:
         eat(TK_NUMBER);
         break;
+      case TK_FLOAT:
+        eat(TK_FLOAT);
+        break;
       case TK_CHAR:
         eat(TK_CHAR);
         break;
@@ -216,6 +219,9 @@ void compileConstant2(void) {
     {
       case TK_NUMBER:
         eat(TK_NUMBER);
+        break;
+      case TK_FLOAT:
+        eat(TK_FLOAT);
         break;
       case TK_IDENT:
         eat(TK_IDENT);
@@ -627,6 +633,7 @@ void compileFactor(void) {
   switch(lookAhead->tokenType)
     {
       case TK_NUMBER:
+      case TK_FLOAT:
       case TK_CHAR:
         compileUnsignedConstant();
         break;
