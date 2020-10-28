@@ -81,11 +81,17 @@ Token* readIdentKeyword(void) {
  
 Token* readNumber(void) {
   int count = 0;
+  int dk = 0;
   Token *token = makeToken(TK_NUMBER, lineNo, colNo);
   while(charCodes[currentChar] == CHAR_DIGIT || charCodes[currentChar] == CHAR_PERIOD)
     {
       if (charCodes[currentChar] == CHAR_PERIOD)
-        token->tokenType = TK_FLOAT;
+        {
+          token->tokenType = TK_FLOAT;
+          dk++;
+          if(dk>1)
+            error(ERR_INVALIDSYMBOL, token->lineNo, token->colNo);
+        }
       token->string[count] = currentChar;
       count++;
       readChar();
