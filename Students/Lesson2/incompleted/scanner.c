@@ -6,6 +6,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "reader.h"
 #include "charcode.h"
@@ -77,18 +78,25 @@ Token* readIdentKeyword(void) {
 
   return token;
 }
-
+ 
 Token* readNumber(void) {
   int count = 0;
   Token *token = makeToken(TK_NUMBER, lineNo, colNo);
-  while(charCodes[currentChar] == CHAR_DIGIT)
+  while(charCodes[currentChar] == CHAR_DIGIT || charCodes[currentChar] == CHAR_PERIOD)
     {
+      if (charCodes[currentChar] == CHAR_PERIOD)
+        token->tokenType = TK_FLOAT;
       token->string[count] = currentChar;
       count++;
       readChar();
     }
+  if(token->string[count-1] == '.')
+    token->string[count++] = '0';
   token->string[count] = '\0';
-  token->value = atoi(token->string);
+
+  if (token->tokenType == TK_NUMBER)
+    token->value = atoi(token->string);
+  else token->value = atof(token->string);
   return token;
 }
 
@@ -204,6 +212,21 @@ Token* getToken(void) {
             token->tokenType = SB_RSEL;
             readChar();
           }
+        if(charCodes[currentChar] == CHAR_DIGIT)
+          {
+            token->tokenType = TK_FLOAT;
+            int count = 2;
+            token->string[0] = '0';
+            token->string[1] = '.';
+            while(charCodes[currentChar] == CHAR_DIGIT)
+              {
+                token->string[count] = currentChar;
+                count++;
+                readChar();
+              }
+            token->string[count] = '\0';
+            token->value = atof(token->string);
+          }
         return token;
   case CHAR_COLON:
         token = makeToken(SB_COLON, lineNo, colNo);
@@ -258,6 +281,7 @@ void printToken(Token *token) {
   switch (token->tokenType) {
   case TK_NONE: printf("TK_NONE\n"); break;
   case TK_IDENT: printf("TK_IDENT(%s)\n", token->string); break;
+  case TK_FLOAT: printf("TK_FLOAT(%s)\n", token->string); break;
   case TK_NUMBER: printf("TK_NUMBER(%s)\n", token->string); break;
   case TK_CHAR: printf("TK_CHAR(\'%s\')\n", token->string); break;
   case TK_EOF: printf("TK_EOF\n"); break;
@@ -326,20 +350,19 @@ int scan(char *fileName) {
 /******************************************************************/
 
 int main(int argc, char *argv[] ) {
-  // if (argc <= 1) {
-  //   printf("scanner: no input file.\n");
-  //   return -1;
-  // }
+  if (argc <= 1) {
+    printf("scanner: no input file.\n");
+    return -1;
+  }
 
-  // if (scan(argv[1]) == IO_ERROR) {
-  //   printf("Can\'t read input file!\n");
-  //   return -1;
-  // }
+  if (scan(argv[1]) == IO_ERROR) {
+    printf("Can\'t read input file!\n");
+    return -1;
+  }
     
-  // Token * token = getToken();
-  // printToken(token);
-  // return 0;
-  printf(keywordEq("KW_INTERGER", "INTERGER"))
+  Token * token = getToken();
+  printToken(token);
+  return 0;
 }
 
 
