@@ -238,6 +238,9 @@ void compileType(void) {
       case KW_INTEGER:
         eat(KW_INTEGER);
         break;
+      case KW_FLOAT:
+        eat(KW_FLOAT);
+        break;
       case KW_CHAR:
         eat(KW_CHAR);
         break;
@@ -263,6 +266,9 @@ void compileBasicType(void) {
     {
       case KW_INTEGER:
         eat(KW_INTEGER);
+        break;
+      case KW_FLOAT:
+        eat(KW_FLOAT);
         break;
       case KW_CHAR:
         eat(KW_CHAR);
