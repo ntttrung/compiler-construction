@@ -301,6 +301,7 @@ void compileParams2(void) {
   switch(lookAhead->tokenType)
     {
       case SB_SEMICOLON:
+        eat(SB_SEMICOLON);
         compileParam();
         compileParams2();
         break;
