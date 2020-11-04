@@ -41,21 +41,40 @@ Type* makeArrayType(int arraySize, Type* elementType) {
 }
 
 Type* duplicateType(Type* type) {
-  // TODO
+  Type * newType = (Type*)malloc(sizeof(Type));
+  newType->typeClass = type->typeClass;
+  newType->elementType = type->elementType;
+  newType->arraySize = type->arraySize;
+  return newType;
 }
 
 int compareType(Type* type1, Type* type2) {
-  // TODO
+  if(type1->typeClass == type2->typeClass)
+    {
+        if(type1->typeClass == TP_ARRAY)
+          {
+            if(!(type1->arraySize == type2->arraySize && compareType(type1->elementType, type2->elementType)))
+              return 0;
+          }
+        return 1;
+    }
+  return 0;
 }
 
 void freeType(Type* type) {
-  // TODO
+  if(type->elementType != NULL)
+    free(type->elementType);
+  free(type);
+  type = NULL;
 }
 
 /******************* Constant utility ******************************/
 
 ConstantValue* makeIntConstant(int i) {
-  // TODO
+  ConstantValue * constvalue = (ConstantValue*)malloc(sizeof(ConstantValue));
+  constvalue->type = TP_INT;
+  constvalue->intValue = i;
+  return constvalue;
 }
 
 ConstantValue* makeCharConstant(char ch) {
