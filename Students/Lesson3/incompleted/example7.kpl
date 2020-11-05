@@ -1,6 +1,6 @@
 PROGRAM  EXAMPLE4;  (* Example 4 *)
-CONST MAX = .1;
-TYPE T = EINTEGER;
+CONST MAX = 4.;
+TYPE T = INTEGER;
 VAR  A : ARRAY(. 10 .) OF T;
      N : INTEGER;
      CH : CHAR;
@@ -24,7 +24,7 @@ BEGIN
      END
 END;
 
-FUNCTION SUM : INTEGER;
+FUNCTION SUM(a:FLOAT) : FLOAT;
 VAR I: INTEGER;
     S : INTEGER;
 BEGIN
@@ -32,7 +32,7 @@ BEGIN
     I := 1;
     WHILE I <= N DO
      BEGIN
-       S := S + * A(.I.);
+       S := S +  A(.I.);
        I := I + 1;
      END
 END;
