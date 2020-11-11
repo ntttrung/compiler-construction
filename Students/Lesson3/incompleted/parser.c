@@ -462,6 +462,7 @@ void compileArguments(void) {
   case KW_ELSE:
   case SB_TIMES:
   case SB_SLASH:
+  case SB_MOD:
   case KW_TO:
   case KW_DO:
   case SB_COMMA:
@@ -545,10 +546,6 @@ void compileExpression(void) {
         break;
       case SB_MINUS:
         eat(SB_MINUS);
-        compileExpression2();
-        break;
-      case SB_MOD:
-        eat(SB_MOD);
         compileExpression2();
         break;
       default:
