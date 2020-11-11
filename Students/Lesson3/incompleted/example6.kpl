@@ -10,11 +10,11 @@ BEGIN
   IF  N != 0  THEN
     BEGIN
       CALL  HANOI(N-1,S,6-S-Z);
-      I:=I+1;  
+      I:=I % 2; 
       CALL  WRITELN;
       CALL  WRITEI(I);  
       CALL  WRITEI(N);
-      CALL  WRITEI(S)  
+      CALL  WRITEI(S);  
       CALL  WRITEI(Z);
       CALL  HANOI(N-1,6-S-Z,Z)
     END

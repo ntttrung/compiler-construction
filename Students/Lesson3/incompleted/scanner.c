@@ -158,6 +158,10 @@ Token* getToken(void) {
     token = makeToken(SB_SLASH, lineNo, colNo);
     readChar(); 
     return token;
+  case CHAR_MOD:
+    token = makeToken(SB_MOD, lineNo, colNo);
+    readChar();
+    return token;
   case CHAR_LT:
     ln = lineNo;
     cn = colNo;
@@ -324,6 +328,7 @@ void printToken(Token *token) {
   case SB_MINUS: printf("SB_MINUS\n"); break;
   case SB_TIMES: printf("SB_TIMES\n"); break;
   case SB_SLASH: printf("SB_SLASH\n"); break;
+  case SB_MOD : printf("SB_MOD\n"); break;
   case SB_LPAR: printf("SB_LPAR\n"); break;
   case SB_RPAR: printf("SB_RPAR\n"); break;
   case SB_LSEL: printf("SB_LSEL\n"); break;

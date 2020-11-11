@@ -547,6 +547,10 @@ void compileExpression(void) {
         eat(SB_MINUS);
         compileExpression2();
         break;
+      case SB_MOD:
+        eat(SB_MOD);
+        compileExpression2();
+        break;
       default:
         compileExpression2();
         break;
@@ -605,6 +609,11 @@ void compileTerm2(void) {
     {
       case SB_TIMES:
         eat(SB_TIMES);
+        compileFactor();
+        compileTerm2();
+        break;
+      case SB_MOD:
+        eat(SB_MOD);
         compileFactor();
         compileTerm2();
         break;
