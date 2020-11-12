@@ -78,11 +78,20 @@ ConstantValue* makeIntConstant(int i) {
 }
 
 ConstantValue* makeCharConstant(char ch) {
-  // TODO
+  ConstantValue * constvalue = (ConstantValue*)malloc(sizeof(ConstantValue));
+  constvalue->type = TP_CHAR;
+  constvalue->charValue = ch;
+  return constvalue;
 }
 
 ConstantValue* duplicateConstantValue(ConstantValue* v) {
-  // TODO
+  ConstantValue* value = (ConstantValue*)malloc(sizeof(ConstantValue));
+  value->type = v->type;
+  if(v->type == TP_INT)
+    value->intValue = v->intValue;
+  else 
+    value->charValue = v->charValue;
+  return value;
 }
 
 /******************* Object utilities ******************************/
@@ -107,7 +116,11 @@ Object* createProgramObject(char *programName) {
 }
 
 Object* createConstantObject(char *name) {
-  // TODO
+  Object *obj = (Object*)malloc(sizeof(Object));
+  strcpy(obj->name, name);
+  obj->kind = OBJ_TYPE;
+  obj->typeAttrs = (TypeAttributes*)malloc(sizeof(TypeAttributes));
+  return obj;
 }
 
 Object* createTypeObject(char *name) {
