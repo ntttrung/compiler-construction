@@ -118,29 +118,56 @@ Object* createProgramObject(char *programName) {
 Object* createConstantObject(char *name) {
   Object *obj = (Object*)malloc(sizeof(Object));
   strcpy(obj->name, name);
-  obj->kind = OBJ_TYPE;
+  obj->kind = OBJ_CONSTANT;
   obj->typeAttrs = (TypeAttributes*)malloc(sizeof(TypeAttributes));
   return obj;
 }
 
 Object* createTypeObject(char *name) {
-  // TODO
+  Object *obj = (Object*)malloc(sizeof(Object));
+  strcpy(obj->name, name);
+  obj->kind = OBJ_TYPE;
+  obj->typeAttrs = (TypeAttributes*)malloc(sizeof(TypeAttributes));
+  return obj;
 }
 
 Object* createVariableObject(char *name) {
-  // TODO
+  Object *obj = (Object*)malloc(sizeof(Object));
+  strcpy(obj->name, name);
+  obj->kind = OBJ_VARIABLE;
+  obj->varAttrs = (TypeAttributes*)malloc(sizeof(TypeAttributes));
+  obj->varAttrs->scope = symtab->currentScope;
+  return obj;
 }
 
 Object* createFunctionObject(char *name) {
-  // TODO
+  Object * obj = (Object*)malloc(sizeof(Object));
+  strcpy(obj->name, name);
+  obj->kind = OBJ_FUNCTION;
+  obj->funcAttrs = (FunctionAttributes*)malloc(sizeof(FunctionAttributes));
+  obj->funcAttrs->paramList = NULL;
+  obj->funcAttrs->scope = createScope(obj, symtab->currentScope);
+  return obj;
 }
 
 Object* createProcedureObject(char *name) {
-  // TODO
+  Object *obj = (Object*)malloc(sizeof(Object));
+  strcpy(obj->name, name);
+  obj->kind = OBJ_PROCEDURE;
+  obj->procAttrs = (ProcedureAttributes*)malloc(sizeof(ProcedureAttributes));
+  obj->procAttrs->paramList = NULL;
+  obj->procAttrs->scope = createScope(obj, symtab->currentScope);
+  return obj;
 }
 
 Object* createParameterObject(char *name, enum ParamKind kind, Object* owner) {
-  // TODO
+  Object *obj = (Object*)malloc(sizeof(Object));
+  strcpy(obj->name, name);
+  obj->kind = OBJ_PARAMETER;
+  obj->paramAttrs = (ParameterAttributes*)malloc(sizeof(ParameterAttributes));
+  obj->paramAttrs->kind = kind;
+  obj->paramAttrs->function = owner;
+  return obj;
 }
 
 void freeObject(Object* obj) {
