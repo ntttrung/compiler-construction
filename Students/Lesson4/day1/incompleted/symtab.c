@@ -111,7 +111,6 @@ Object* createProgramObject(char *programName) {
   program->progAttrs = (ProgramAttributes*) malloc(sizeof(ProgramAttributes));
   program->progAttrs->scope = createScope(program,NULL);
   symtab->program = program;
-
   return program;
 }
 
@@ -119,7 +118,7 @@ Object* createConstantObject(char *name) {
   Object *obj = (Object*)malloc(sizeof(Object));
   strcpy(obj->name, name);
   obj->kind = OBJ_CONSTANT;
-  obj->typeAttrs = (TypeAttributes*)malloc(sizeof(TypeAttributes));
+  obj->constAttrs = (ConstantAttributes*)malloc(sizeof(ConstantAttributes));
   return obj;
 }
 
@@ -135,7 +134,7 @@ Object* createVariableObject(char *name) {
   Object *obj = (Object*)malloc(sizeof(Object));
   strcpy(obj->name, name);
   obj->kind = OBJ_VARIABLE;
-  obj->varAttrs = (TypeAttributes*)malloc(sizeof(TypeAttributes));
+  obj->varAttrs = (VariableAttributes*)malloc(sizeof(VariableAttributes));
   obj->varAttrs->scope = symtab->currentScope;
   return obj;
 }
@@ -171,7 +170,16 @@ Object* createParameterObject(char *name, enum ParamKind kind, Object* owner) {
 }
 
 void freeObject(Object* obj) {
-  // TODO
+  switch(obj->kind)
+    {
+      case OBJ_CONSTANT:
+        free(obj->constAttrs->value);
+        free(obj->constAttrs);
+        break;
+      case OBJ_TYPE:
+        free(obj->typeAttrs->actualType);
+        free(obj->typeAttrs)
+    }
 }
 
 void freeScope(Scope* scope) {
