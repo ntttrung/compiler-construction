@@ -1,7 +1,7 @@
 Program Example6;
    Const c1 = 10;
   	 c2 = 'a';
-   Type t1 = array(. 10 .) of integer;
+   Type t1 = array(. 10 .) of Float;
    Var v1 : Float;
        v2 : Array(. 10 .) of t1;
 
