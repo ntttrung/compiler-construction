@@ -76,18 +76,32 @@ Token* readIdentKeyword(void) {
 }
 
 Token* readNumber(void) {
-  Token *token = makeToken(TK_NUMBER, lineNo, colNo);
   int count = 0;
-
-  while ((currentChar != EOF) && (charCodes[currentChar] == CHAR_DIGIT)) {
-    token->string[count++] = (char)currentChar;
-    readChar();
-  }
-
+  int dk = 0;
+  Token *token = makeToken(TK_NUMBER, lineNo, colNo);
+  while(charCodes[currentChar] == CHAR_DIGIT || charCodes[currentChar] == CHAR_PERIOD)
+    {
+      if (charCodes[currentChar] == CHAR_PERIOD)
+        {
+          token->tokenType = TK_FLOAT;
+          dk++;
+          if(dk>1)
+            error(ERR_INVALID_CONSTANT,token->lineNo, token->colNo);
+        }
+      token->string[count] = currentChar;
+      count++;
+      readChar();
+    }
+  if(token->string[count-1] == '.')
+    token->string[count++] = '0';
   token->string[count] = '\0';
-  token->value = atoi(token->string);
+
+  if (token->tokenType == TK_NUMBER)
+    token->value = atoi(token->string);
+  else token->value = atof(token->string);
   return token;
 }
+
 
 Token* readConstChar(void) {
   Token *token = makeToken(TK_CHAR, lineNo, colNo);
@@ -183,13 +197,30 @@ Token* getToken(void) {
     readChar(); 
     return token;
   case CHAR_PERIOD:
-    ln = lineNo;
-    cn = colNo;
-    readChar();
-    if ((currentChar != EOF) && (charCodes[currentChar] == CHAR_RPAR)) {
-      readChar();
-      return makeToken(SB_RSEL, ln, cn);
-    } else return makeToken(SB_PERIOD, ln, cn);
+        token = makeToken(SB_PERIOD, lineNo, colNo);
+        readChar();
+        if(charCodes[currentChar] == CHAR_RPAR)
+          {
+            //right parenthesis
+            token->tokenType = SB_RSEL;
+            readChar();
+          }
+        if(charCodes[currentChar] == CHAR_DIGIT)
+          {
+            token->tokenType = TK_FLOAT;
+            int count = 2;
+            token->string[0] = '0';
+            token->string[1] = '.';
+            while(charCodes[currentChar] == CHAR_DIGIT)
+              {
+                token->string[count] = currentChar;
+                count++;
+                readChar();
+              }
+            token->string[count] = '\0';
+            token->value = atof(token->string);
+          }
+        return token;
   case CHAR_SEMICOLON:
     token = makeToken(SB_SEMICOLON, lineNo, colNo);
     readChar(); 
@@ -262,6 +293,7 @@ void printToken(Token *token) {
   case KW_TYPE: printf("KW_TYPE\n"); break;
   case KW_VAR: printf("KW_VAR\n"); break;
   case KW_INTEGER: printf("KW_INTEGER\n"); break;
+  case KW_FLOAT: printf("KW_FLOAT\n"); break;
   case KW_CHAR: printf("KW_CHAR\n"); break;
   case KW_ARRAY: printf("KW_ARRAY\n"); break;
   case KW_OF: printf("KW_OF\n"); break;

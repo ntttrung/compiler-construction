@@ -2,7 +2,7 @@ Program Example6;
    Const c1 = 10;
   	 c2 = 'a';
    Type t1 = array(. 10 .) of integer;
-   Var v1 : Integer;
+   Var v1 : Float;
        v2 : Array(. 10 .) of t1;
 
    Function F(p1 : Integer; Var p2 : char) : Integer;
