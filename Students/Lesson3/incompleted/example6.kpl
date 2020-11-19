@@ -9,7 +9,7 @@ PROCEDURE  HANOI(N:INTEGER;  S:INTEGER;  Z:INTEGER);
 BEGIN
   IF  N != 0  THEN
     BEGIN
-      CALL  HANOI(N-1,S,6-S-Z);
+      CALL  HANOI(N-1,S,6-S-Z)
       I:=I % (2); 
       CALL  WRITELN;
       CALL  WRITEI(I);  
