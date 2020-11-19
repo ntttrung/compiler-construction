@@ -33,6 +33,7 @@ BEGIN
     WHILE I <= N DO
      BEGIN
        S := S +  A(.I.);
+       S += S;
        I := I + 1;
      END
 END;

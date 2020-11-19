@@ -3,5 +3,5 @@ CONST a = 3.1416;
 TYPE b = FLOAT;
 VAR a: FLOAT;    
 Begin
-    a *= 3.14 + 5.0;
+    a := 3.14 + 5.0;
 End. (* Example 1 *)

@@ -392,9 +392,6 @@ void compileAssignSt(void) {
     compileIndexes();
   switch(lookAhead->tokenType)
     {
-      case SB_ASSIGN:
-        eat(SB_ASSIGN);
-        break;
       case SB_ASSIGN_MINUS:
         eat(SB_ASSIGN_MINUS);
         break;
@@ -409,6 +406,7 @@ void compileAssignSt(void) {
         break;
       default:
         eat(SB_ASSIGN);
+        break;
     }
   compileExpression();
   assert("Assign statement parsed ....");
