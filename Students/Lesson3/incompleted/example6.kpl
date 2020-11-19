@@ -11,7 +11,7 @@ BEGIN
     BEGIN
       CALL  HANOI(N-1,S,6-S-Z);
       I:=I % (2); 
-      CALL  WRITELN
+      CALL  WRITELN;
       CALL  WRITEI(I);  
       CALL  WRITEI(N);
       CALL  WRITEI(S);  
