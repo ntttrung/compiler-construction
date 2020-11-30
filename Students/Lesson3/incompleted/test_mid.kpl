@@ -1,0 +1,39 @@
+PROGRAM NTT;
+TYPE T = INTERGER;
+VAR N : INTERGER;
+    A : ARRAY(. 10 .) OF T;
+
+PROCEDURE INPUT;
+VAR I : INTERGER;
+BEGIN
+    FOR I:=1 TO N DO
+        A(.I.) := READI;
+END;
+
+PROCEDURE OUTPUT;
+VAR I : INTERGER;
+BEGIN
+    FOR I:= N TO 1 DO
+        BEGIN   
+            CALL WRITEI(A(.I.));
+            CALL WRITELN;
+        END
+END;
+
+FUNCTION SUM: INTERGER'
+VAR I : INTERGER;
+    S : INTERGER;
+BEGIN
+    S := 0;
+    FOR I := 1 TO N DO  
+        S := S + A(.I.);
+    SUM := S;
+END;
+
+BEGIN
+    N := READI;
+    CALL INPUT;
+    CALL OUTPUT;
+    CALL WRITEI(SUM);
+END.
+
