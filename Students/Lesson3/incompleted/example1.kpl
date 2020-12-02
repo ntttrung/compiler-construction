@@ -1,7 +1,7 @@
 Program Example1; (* Example 1 *)
-CONST a = 3.1416;
-TYPE b = FLOAT;
-VAR a: FLOAT;    
+CONST t = 10;
+TYPE T = Integer;
+VAR ;    
 Begin
-    A += -N % N
+    A += -N % N;
 End. (* Example 1 *)

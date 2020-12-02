@@ -93,10 +93,17 @@ void compileConstDecls(void) {
 
 void compileConstDecl(void) {
   assert("Parsing constant ....");
-  eat(TK_IDENT);
-  eat(SB_EQ);
-  compileConstant();
-  eat(SB_SEMICOLON);
+  if(lookAhead->tokenType == TK_IDENT)
+    {
+      eat(TK_IDENT);
+      eat(SB_EQ);
+      compileConstant();
+      eat(SB_SEMICOLON);
+    }
+  else
+    {
+      error(ERR_INVALIDCONSTDECL, currentToken->lineNo, currentToken->colNo);
+    }
   assert("Constant parsed!");
 }
 
@@ -109,10 +116,17 @@ void compileTypeDecls(void) {
 
 void compileTypeDecl(void) {
   assert("Parsing a type ....");
-  eat(TK_IDENT);
-  eat(SB_EQ);
-  compileType();
-  eat(SB_SEMICOLON);
+  if(lookAhead->tokenType == TK_IDENT)
+    {
+      eat(TK_IDENT);
+      eat(SB_EQ);
+      compileType();
+      eat(SB_SEMICOLON);
+    }
+  else 
+    {
+      error(ERR_INVALIDTYPEDECL, currentToken->lineNo, currentToken->colNo);
+    }
   assert("Type parsed!");
 }
 
@@ -125,10 +139,17 @@ void compileVarDecls(void) {
 
 void compileVarDecl(void) {
   assert("Parsing a variable ....");
-  eat(TK_IDENT);
-  eat(SB_COLON);
-  compileType();
-  eat(SB_SEMICOLON);
+  if(lookAhead->tokenType == TK_IDENT)
+    {
+     eat(TK_IDENT);
+      eat(SB_COLON);
+      compileType();
+      eat(SB_SEMICOLON);
+    }
+  else 
+    {
+      error(ERR_INVALIDVARDECL, currentToken->lineNo, currentToken->colNo);
+    }
   assert("A variable parsed!");
 }
 

@@ -1,5 +1,5 @@
 PROGRAM  EXAMPLE4;  (* Example 4 *)
-CONST MAX = 4.;
+CONST MAX = 4;
 TYPE T = INTEGER;
 VAR  A : ARRAY(. 10 .) OF T;
      N : INTEGER;
@@ -7,7 +7,6 @@ VAR  A : ARRAY(. 10 .) OF T;
 
 PROCEDURE INPUT;
 VAR I : INTEGER;
-    TMP : INTEGER;
 BEGIN
   N := READI;
   FOR I := 1 TO N DO
@@ -24,7 +23,7 @@ BEGIN
      END
 END;
 
-FUNCTION SUM(a:FLOAT) : FLOAT;
+FUNCTION SUM: INTEGER;
 VAR I: INTEGER;
     S : INTEGER;
 BEGIN
@@ -35,13 +34,13 @@ BEGIN
        S := S +  A(.I.);
        S += S + 1;
        I := I + 1;
-     END
+     END;
+    SUM := S
 END;
 
 BEGIN
    CH := 'y';
-   a := *a / b;
-   WHILE CH  = 'y' DO
+   WHILE CH  == 'y' DO
      BEGIN
        CALL INPUT;
        CALL OUTPUT;

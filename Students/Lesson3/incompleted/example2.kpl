@@ -13,5 +13,4 @@ Begin
       Call WriteLn ;
       Call WriteI( F(i));
     End;
-If i  1
 End. (* Factorial *)

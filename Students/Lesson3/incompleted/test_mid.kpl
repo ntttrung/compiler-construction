@@ -13,12 +13,15 @@ END;
 PROCEDURE OUTPUT;
 VAR I : INTEGER;
 BEGIN
-    FOR I:= N TO 1 DO
+    I := N;
+    WHILE I > 0 DO
         BEGIN   
             CALL WRITEI(A(.I.));
             CALL WRITELN;
+            I := I - 1
         END
 END;
+
 
 FUNCTION SUM: INTEGER;
 VAR I : INTEGER;
