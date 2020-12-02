@@ -165,30 +165,41 @@ void compileSubDecls(void) {
             compileProcDecl();
             compileSubDecls();
           }
+  
   assert("Subroutines parsed ....");
 }
 
 void compileFuncDecl(void) {
   assert("Parsing a function ....");
   eat(KW_FUNCTION);
-  eat(TK_IDENT);
-  compileParams();
-  eat(SB_COLON);
-  compileBasicType();
-  eat(SB_SEMICOLON);
-  compileBlock();
-  eat(SB_SEMICOLON);
+  if (lookAhead->tokenType == TK_IDENT)
+    {
+      eat(TK_IDENT);
+      compileParams();
+      eat(SB_COLON);
+      compileBasicType();
+      eat(SB_SEMICOLON);
+      compileBlock();
+      eat(SB_SEMICOLON);
+    }
+  else 
+    error(ERR_INVALIDSUBDECL, currentToken->lineNo, currentToken->colNo);
   assert("Function parsed ....");
 }
 
 void compileProcDecl(void) {
   assert("Parsing a procedure ....");
   eat(KW_PROCEDURE);
-  eat(TK_IDENT);
-  compileParams();
-  eat(SB_SEMICOLON);
-  compileBlock();
-  eat(SB_SEMICOLON);
+  if(lookAhead->tokenType == TK_IDENT)
+    {
+        eat(TK_IDENT);
+        compileParams();
+        eat(SB_SEMICOLON);
+        compileBlock();
+        eat(SB_SEMICOLON);
+    }
+  else 
+    error(ERR_INVALIDSUBDECL, currentToken->lineNo, currentToken->colNo);
   assert("Procedure parsed ....");
 }
 

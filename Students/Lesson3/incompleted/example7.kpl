@@ -5,7 +5,7 @@ VAR  A : ARRAY(. 10 .) OF T;
      N : INTEGER;
      CH : CHAR;
 
-PROCEDURE INPUT;
+PROCEDURE ;
 VAR I : INTEGER;
 BEGIN
   N := READI;
