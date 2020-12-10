@@ -36,6 +36,9 @@ void printConstantValue(ConstantValue* value) {
   case TP_INT:
     printf("%d",value->intValue);
     break;
+  case TP_FLOAT:
+    printf("%f", value->floatValue);
+    break;
   case TP_CHAR:
     printf("\'%c\'",value->charValue);
     break;

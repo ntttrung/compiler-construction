@@ -1,42 +1,8 @@
-PROGRAM NTT;
-TYPE T = INTEGER;
-VAR N : INTEGER;
-    A : ARRAY(. 10 .) OF T;
-
-PROCEDURE INPUT;
-VAR I : INTEGER;
+PROGRAM midterm;
+CONST pi = 3.1416;
+TYPE t = float;
+VAR f : t;
+    r : t;
 BEGIN
-    FOR I:=1 TO N DO
-        A(.I.) := READI;
-END;
-
-PROCEDURE OUTPUT;
-VAR I : INTEGER;
-BEGIN
-    I := N;
-    WHILE I > 0 DO
-        BEGIN   
-            CALL WRITEI(A(.I.));
-            CALL WRITELN;
-            I := I - 1
-        END
-END;
-
-
-FUNCTION SUM: INTEGER;
-VAR I : INTEGER;
-    S : INTEGER;
-BEGIN
-    S := 0;
-    FOR I := 1 TO N DO  
-        S := S + A(.I.);
-    SUM := S;
-END;
-
-BEGIN
-    N := READI;
-    CALL INPUT;
-    CALL OUTPUT;
-    CALL WRITEI(SUM);
+    f += 2*r*pi;
 END.
-

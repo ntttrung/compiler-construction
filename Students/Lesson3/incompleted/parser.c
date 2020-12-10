@@ -130,6 +130,7 @@ void compileTypeDecl(void) {
   assert("Type parsed!");
 }
 
+
 void compileVarDecls(void) {
   assert("Parsing variables ....");
   while(lookAhead->tokenType == TK_IDENT)

@@ -235,6 +235,12 @@ ConstantValue* compileConstant2(void) {
     break;
   case TK_IDENT:
     eat(TK_IDENT);
+    Object* obj = lookupObject(currentToken->string);
+    if(obj == NULL)
+      error(ERR_UNDECLARED_CONSTANT, currentToken->lineNo, currentToken->colNo);
+    if(obj->kind != OBJ_CONSTANT)
+      error(ERR_INVALID_CONSTANT, currentToken->lineNo, currentToken->colNo);
+    constValue = duplicateConstantValue(obj->constAttrs->value);
     break;
   default:
     error(ERR_INVALID_CONSTANT, lookAhead->lineNo, lookAhead->colNo);
