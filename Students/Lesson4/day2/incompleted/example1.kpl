@@ -1,3 +1,10 @@
 Program Example1; (* Example 1 *)
+CONST P = 3.146;
+TYPE T = FLOAT;
+FUNCTION F(VAR X: FLOAT; Y: INTEGER) : FLOAT;
+    VAR U : FLOAT;
+    Begin
+        F += 4.5;
+    End;
 Begin
 End. (* Example 1 *)

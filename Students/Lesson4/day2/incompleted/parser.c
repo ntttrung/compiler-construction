@@ -176,11 +176,11 @@ ConstantValue* compileUnsignedConstant(void) {
   switch (lookAhead->tokenType) {
   case TK_NUMBER:
     eat(TK_NUMBER);
-    constValue = makeIntConstant(currentToken->value);
+    constValue = makeIntConstant(currentToken->value.intvalue);
     break;
   case TK_FLOAT:
     eat(TK_FLOAT);
-    constValue = makeFloatConstant(currentToken->value);
+    constValue = makeFloatConstant(currentToken->value.floatvalue);
     break;
   case TK_IDENT:
     eat(TK_IDENT);
@@ -227,11 +227,11 @@ ConstantValue* compileConstant2(void) {
   switch (lookAhead->tokenType) {
   case TK_NUMBER:
     eat(TK_NUMBER);
-    constValue = makeIntConstant(currentToken->value);
+    constValue = makeIntConstant(currentToken->value.intvalue);
     break;
   case TK_FLOAT:
     eat(TK_FLOAT);
-    constValue = makeFloatConstant(currentToken->value);
+    constValue = makeFloatConstant(currentToken->value.floatvalue);
     break;
   case TK_IDENT:
     eat(TK_IDENT);
@@ -272,7 +272,7 @@ Type* compileType(void) {
     eat(KW_ARRAY);
     eat(SB_LSEL);
     eat(TK_NUMBER);
-    size = currentToken->value;
+    size = currentToken->value.intvalue;
     eat(SB_RSEL);
     eat(KW_OF);
     eleType = compileType();
@@ -406,7 +406,24 @@ void compileLValue(void) {
 
 void compileAssignSt(void) {
   compileLValue();
-  eat(SB_ASSIGN);
+  switch(lookAhead->tokenType)
+    {
+      case SB_ASSIGN_MINUS:
+        eat(SB_ASSIGN_MINUS);
+        break;
+      case SB_ASSIGN_PLUS:
+        eat(SB_ASSIGN_PLUS);
+        break;
+      case SB_ASSIGN_SLASH:
+        eat(SB_ASSIGN_SLASH);
+        break;
+      case SB_ASSIGN_TIMES:
+        eat(SB_ASSIGN_TIMES);
+        break;
+      default:
+        eat(SB_ASSIGN);
+        break;
+    }
   compileExpression();
 }
 
@@ -671,6 +688,12 @@ int compile(char *fileName) {
 
   printObject(symtab->program,0);
 
+// ObjectNode* obj = symtab->globalObjectList;
+//   while (obj!=NULL)
+//     {
+//         printObject(obj->object,0);
+//         obj = obj->next;
+//     }
   cleanSymTab();
 
   free(currentToken);

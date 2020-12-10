@@ -22,15 +22,23 @@ typedef enum {
 
   SB_SEMICOLON, SB_COLON, SB_PERIOD, SB_COMMA,
   SB_ASSIGN, SB_EQ, SB_NEQ, SB_LT, SB_LE, SB_GT, SB_GE,
-  SB_PLUS, SB_MINUS, SB_TIMES, SB_SLASH, SB_MOD,
+  SB_PLUS, SB_MINUS, SB_TIMES, SB_SLASH, SB_MOD, SB_ASSIGN_MINUS, SB_ASSIGN_PLUS,
+  SB_ASSIGN_SLASH, SB_ASSIGN_TIMES,
   SB_LPAR, SB_RPAR, SB_LSEL, SB_RSEL
 } TokenType; 
+
+typedef struct 
+  {
+    int intvalue;
+    float floatvalue;
+  }
+value_;
 
 typedef struct {
   char string[MAX_IDENT_LEN + 1];
   int lineNo, colNo;
   TokenType tokenType;
-  int value;
+  value_ value;
 } Token;
 
 TokenType checkKeyword(char *string);
