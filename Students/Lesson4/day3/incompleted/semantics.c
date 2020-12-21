@@ -103,3 +103,23 @@ Object* checkDeclaredLValueIdent(char* name) {
   return obj;
 }
 
+void checkIntType(Type* type) {
+  // TODO
+}
+
+void checkCharType(Type* type) {
+  // TODO
+}
+
+void checkBasicType(Type* type) {
+  // TODO
+}
+
+void checkArrayType(Type* type) {
+  // TODO
+}
+
+void checkTypeEquality(Type* type1, Type* type2) {
+  // TODO
+}
+
