@@ -17,6 +17,7 @@ Token *currentToken;
 Token *lookAhead;
 
 extern Type* intType;
+extern Type* floatType;
 extern Type* charType;
 extern SymTab* symtab;
 
@@ -214,7 +215,11 @@ ConstantValue* compileUnsignedConstant(void) {
   switch (lookAhead->tokenType) {
   case TK_NUMBER:
     eat(TK_NUMBER);
-    constValue = makeIntConstant(currentToken->value);
+    constValue = makeIntConstant(currentToken->value.intvalue);
+    break;
+  case TK_FLOAT:
+    eat(TK_FLOAT);
+    constValue = makeFloatConstant(currentToken->value.floatvalue);
     break;
   case TK_IDENT:
     eat(TK_IDENT);
@@ -267,7 +272,11 @@ ConstantValue* compileConstant2(void) {
   switch (lookAhead->tokenType) {
   case TK_NUMBER:
     eat(TK_NUMBER);
-    constValue = makeIntConstant(currentToken->value);
+    constValue = makeIntConstant(currentToken->value.intvalue);
+    break;
+  case TK_FLOAT:
+    eat(TK_FLOAT);
+    constValue = makeFloatConstant(currentToken->value.floatvalue);
     break;
   case TK_IDENT:
     eat(TK_IDENT);
@@ -296,6 +305,10 @@ Type* compileType(void) {
     eat(KW_INTEGER);
     type =  makeIntType();
     break;
+  case KW_FLOAT: 
+    eat(KW_FLOAT);
+    type =  makeFloatType();
+    break;
   case KW_CHAR: 
     eat(KW_CHAR); 
     type = makeCharType();
@@ -305,7 +318,7 @@ Type* compileType(void) {
     eat(SB_LSEL);
     eat(TK_NUMBER);
 
-    arraySize = currentToken->value;
+    arraySize = currentToken->value.intvalue;
 
     eat(SB_RSEL);
     eat(KW_OF);
@@ -335,6 +348,10 @@ Type* compileBasicType(void) {
   case KW_INTEGER: 
     eat(KW_INTEGER); 
     type = makeIntType();
+    break;
+  case KW_FLOAT: 
+    eat(KW_FLOAT); 
+    type = makeFloatType();
     break;
   case KW_CHAR: 
     eat(KW_CHAR); 
@@ -672,6 +689,9 @@ void compileFactor(void) {
   switch (lookAhead->tokenType) {
   case TK_NUMBER:
     eat(TK_NUMBER);
+    break;
+  case TK_FLOAT:
+    eat(TK_FLOAT);
     break;
   case TK_CHAR:
     eat(TK_CHAR);

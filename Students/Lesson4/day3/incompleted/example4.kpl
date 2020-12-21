@@ -1,6 +1,6 @@
 PROGRAM  EXAMPLE4;  (* Example 4 *)
-CONST MAX = 10;
-TYPE T = INTEGER;
+CONST MAX = 10.2;
+TYPE T = FLOAT;
 VAR  A : ARRAY(. 10 .) OF T;
      N : INTEGER;
      CH : CHAR;

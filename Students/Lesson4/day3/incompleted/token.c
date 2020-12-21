@@ -17,6 +17,7 @@ struct {
   {"TYPE", KW_TYPE},
   {"VAR", KW_VAR},
   {"INTEGER", KW_INTEGER},
+  {"FLOAT", KW_FLOAT},
   {"CHAR", KW_CHAR},
   {"ARRAY", KW_ARRAY},
   {"OF", KW_OF},
@@ -63,6 +64,7 @@ char *tokenToString(TokenType tokenType) {
   case TK_NONE: return "None";
   case TK_IDENT: return "an identification";
   case TK_NUMBER: return "a number";
+  case TK_FLOAT: return "a float number";
   case TK_CHAR: return "a constant char";
   case TK_EOF: return "end of file";
 
@@ -71,6 +73,7 @@ char *tokenToString(TokenType tokenType) {
   case KW_TYPE: return "keyword TYPE";
   case KW_VAR: return "keyword VAR";
   case KW_INTEGER: return "keyword INTEGER";
+  case KW_FLOAT: return "keyword FLOAT";
   case KW_CHAR: return "keyword CHAR";
   case KW_ARRAY: return "keyword ARRAY";
   case KW_OF: return "keyword OF";
@@ -92,6 +95,10 @@ char *tokenToString(TokenType tokenType) {
   case SB_PERIOD: return "\'.\'";
   case SB_COMMA: return "\',\'";
   case SB_ASSIGN: return "\':=\'";
+  case SB_ASSIGN_MINUS: return "\'-=\'";
+  case SB_ASSIGN_PLUS: return "\'+=\'";
+  case SB_ASSIGN_TIMES: return "\'*=\'";
+  case SB_ASSIGN_SLASH: return "\'/=\'";
   case SB_EQ: return "\'=\'";
   case SB_NEQ: return "\'!=\'";
   case SB_LT: return "\'<\'";
@@ -102,6 +109,7 @@ char *tokenToString(TokenType tokenType) {
   case SB_MINUS: return "\'-\'";
   case SB_TIMES: return "\'*\'";
   case SB_SLASH: return "\'/\'";
+  case SB_MOD: return "\'%\'";
   case SB_LPAR: return "\'(\'";
   case SB_RPAR: return "\')\'";
   case SB_LSEL: return "\'(.\'";

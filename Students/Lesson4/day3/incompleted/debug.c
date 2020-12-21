@@ -17,6 +17,9 @@ void printType(Type* type) {
   case TP_INT:
     printf("Int");
     break;
+  case TP_FLOAT:
+    printf("Float");
+    break;
   case TP_CHAR:
     printf("Char");
     break;
@@ -32,6 +35,9 @@ void printConstantValue(ConstantValue* value) {
   switch (value->type) {
   case TP_INT:
     printf("%d",value->intValue);
+    break;
+  case TP_FLOAT:
+    printf("%.3f", value->floatValue);
     break;
   case TP_CHAR:
     printf("\'%c\'",value->charValue);

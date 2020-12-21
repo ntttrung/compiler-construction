@@ -28,6 +28,13 @@ Type* makeIntType(void) {
   return type;
 }
 
+Type* makeFloatType(void) {
+  Type* type = (Type*) malloc(sizeof(Type));
+  type->typeClass = TP_FLOAT;
+  return type;
+}
+
+
 Type* makeCharType(void) {
   Type* type = (Type*) malloc(sizeof(Type));
   type->typeClass = TP_CHAR;
@@ -65,6 +72,7 @@ int compareType(Type* type1, Type* type2) {
 void freeType(Type* type) {
   switch (type->typeClass) {
   case TP_INT:
+  case TP_FLOAT:
   case TP_CHAR:
     free(type);
     break;
@@ -84,6 +92,13 @@ ConstantValue* makeIntConstant(int i) {
   return value;
 }
 
+ConstantValue* makeFloatConstant(float i) {
+  ConstantValue* value = (ConstantValue*) malloc(sizeof(ConstantValue));
+  value->type = TP_FLOAT;
+  value->floatValue = i;
+  return value;
+}
+
 ConstantValue* makeCharConstant(char ch) {
   ConstantValue* value = (ConstantValue*) malloc(sizeof(ConstantValue));
   value->type = TP_CHAR;
@@ -96,6 +111,8 @@ ConstantValue* duplicateConstantValue(ConstantValue* v) {
   value->type = v->type;
   if (v->type == TP_INT) 
     value->intValue = v->intValue;
+  if (v->type == TP_FLOAT)
+    value->floatValue = v->floatValue;
   else
     value->charValue = v->charValue;
   return value;
