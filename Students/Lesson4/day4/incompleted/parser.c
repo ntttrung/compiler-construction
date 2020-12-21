@@ -444,14 +444,20 @@ void compileStatement(void) {
   }
 }
 
-void compileLValue(void) {
+Type* compileLValue(void) {
   Object* var;
-
+  Type* varType;
   eat(TK_IDENT);
   // check if the identifier is a function identifier, or a variable identifier, or a parameter  
   var = checkDeclaredLValueIdent(currentToken->string);
   if (var->kind == OBJ_VARIABLE)
-    compileIndexes();
+    varType = compileIndexes(var->varAttrs->type);
+  else if(var->kind == OBJ_FUNCTION)
+    varType = var->funcAttrs->returnType;
+  else if(var->kind == OBJ_PARAMETER)
+    varType = var->paramAttrs->type;
+  
+  return varType;
 }
 
 void compileAssignSt(void) {
