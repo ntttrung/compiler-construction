@@ -1,10 +1,12 @@
 Program Example5; (* Example 1 *)
 const c = 1;
 type t = char;
+VAR x: integer;
 function f(i : integer):char;
 const b = c;
-type a = array(.5.) of t;
+type a = array(. 5 .) of t;
 begin
 end;
 Begin
+    for x := 1 to 2 do
 End. (* Example 1 *)
