@@ -1,12 +1,12 @@
 Program Example5; (* Example 1 *)
 const c = 1;
 type t = char;
-VAR x: integer;
+VAR x: Float;
 function f(i : integer):char;
 const b = c;
 type a = array(. 5 .) of t;
 begin
 end;
 Begin
-    for x := 1 to 2 do
+    x += 4.3 + 2.1
 End. (* Example 1 *)

@@ -123,6 +123,11 @@ void checkBasicType(Type* type) {
     error(ERR_TYPE_INCONSISTENCY, currentToken->lineNo, currentToken->colNo);
 }
 
+void checkBasicType_f(Type* type) {
+  if(type->typeClass == TK_FLOAT)
+    error(ERR_FOR_INDEX_FLOAT, currentToken->lineNo, currentToken->colNo);
+}
+
 void checkArrayType(Type* type) {
   if(type->typeClass != TP_ARRAY)
     error(ERR_TYPE_INCONSISTENCY, currentToken->lineNo, currentToken->colNo);
@@ -138,4 +143,11 @@ void checkTypeEquality(Type* type1, Type* type2) {
         error(ERR_TYPE_INCONSISTENCY, currentToken->lineNo, currentToken->colNo);
     }
 }
+
+void check_int_float(Type* type)
+  {
+    if(type->typeClass != TP_INT && type->typeClass != TP_FLOAT)
+      error(ERR_TYPE_INCONSISTENCY, currentToken->lineNo, currentToken->colNo);
+  }
+
 

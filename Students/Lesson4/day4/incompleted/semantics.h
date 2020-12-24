@@ -23,6 +23,8 @@ void checkFloatType(Type* type);
 void checkCharType(Type* type);
 void checkArrayType(Type* type);
 void checkBasicType(Type* type);
+void checkBasicType_f(Type* type);
+void check_int_float(Type* type);
 void checkTypeEquality(Type* type1, Type* type2);
 
 #endif

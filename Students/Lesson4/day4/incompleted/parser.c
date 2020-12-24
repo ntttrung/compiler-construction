@@ -32,6 +32,7 @@ void eat(TokenType tokenType) {
   if (lookAhead->tokenType == tokenType) {
     scan();
   } else missingToken(tokenType, lookAhead->lineNo, lookAhead->colNo);
+  printToken(lookAhead);
 }
 
 void compileProgram(void) {
@@ -316,6 +317,8 @@ Type* compileType(void) {
   case KW_ARRAY:
     eat(KW_ARRAY);
     eat(SB_LSEL);
+    if(lookAhead->tokenType != TK_NUMBER)
+      error(ERR_TYPE_INCONSISTENCY, currentToken->lineNo, currentToken->colNo);
     eat(TK_NUMBER);
 
     arraySize = currentToken->value.intvalue;
@@ -465,7 +468,24 @@ void compileAssignSt(void) {
   Type* ltype;
   Type* rtype;
   ltype = compileLValue();
-  eat(SB_ASSIGN);
+  switch(lookAhead->tokenType)
+    {
+      case SB_ASSIGN:
+        eat(SB_ASSIGN);
+        break;
+      case SB_ASSIGN_MINUS:
+        eat(SB_ASSIGN_MINUS);
+        break;
+      case SB_ASSIGN_PLUS:
+        eat(SB_ASSIGN_PLUS);
+        break;
+      case SB_ASSIGN_SLASH:
+        eat(SB_ASSIGN_SLASH);
+        break;
+      case SB_ASSIGN_TIMES:
+        eat(SB_ASSIGN_TIMES);
+        break;
+    }
   rtype = compileExpression();
   checkTypeEquality(ltype, rtype);
 }
@@ -514,14 +534,19 @@ void compileForSt(void) {
   // TODO: check if the identifier is a variable
   if(var == NULL)
     error(ERR_UNDECLARED_VARIABLE, currentToken->lineNo, currentToken->colNo);
-
-  checkBasicType(var->varAttrs->type);
+  // checkBasicType_f(var->varAttrs->type);
+  if(var->varAttrs->type->typeClass == TP_FLOAT)
+    error(ERR_FOR_INDEX_FLOAT, currentToken->lineNo, currentToken->colNo);
   eat(SB_ASSIGN);
   Type* type1 = compileExpression();
-  checkBasicType(type1);
+  // checkBasicType_f(type1);
+  if(type1->typeClass == TP_FLOAT)
+    error(ERR_FOR_INDEX_FLOAT, currentToken->lineNo, currentToken->colNo);
   eat(KW_TO);
   Type* type2 = compileExpression();
-  checkBasicType(type2);
+  // checkBasicType_f(type2);
+  if(type2->typeClass == TP_FLOAT)
+    error(ERR_FOR_INDEX_FLOAT, currentToken->lineNo, currentToken->colNo);
   checkTypeEquality(var->varAttrs->type, type1);
   checkTypeEquality(type1, type2);
   eat(KW_DO);
@@ -565,6 +590,7 @@ void compileArguments(ObjectNode* param) {
     // Check FOLLOW set 
   case SB_TIMES:
   case SB_SLASH:
+  case SB_MOD:
   case SB_PLUS:
   case SB_MINUS:
   case KW_TO:
@@ -627,11 +653,14 @@ Type* compileExpression(void) {
   case SB_PLUS:
     eat(SB_PLUS);
     type = compileExpression2();
-    checkIntType(type);
+    if(type->typeClass != TP_INT && type->typeClass !=TP_FLOAT)
+      error(ERR_TYPE_INCONSISTENCY, currentToken->lineNo, currentToken->colNo);
     break;
   case SB_MINUS:
     eat(SB_MINUS);
     type = compileExpression2();
+    if(type->typeClass != TP_INT && type->typeClass !=TP_FLOAT)
+      error(ERR_TYPE_INCONSISTENCY, currentToken->lineNo, currentToken->colNo);
     checkIntType(type);
     break;
   default:
@@ -662,19 +691,23 @@ Type* compileExpression3(void) {
   case SB_PLUS:
     eat(SB_PLUS);
     type1 = compileTerm();
-    checkIntType(type1);
+    // checkIntType(type1);
+    check_int_float(type1);
     type2 = compileExpression3();
     if (type2 != NULL)
-      checkIntType(type2);
+      // checkIntType(type2);
+      check_int_float(type2);
     return type1;
     break;
   case SB_MINUS:
     eat(SB_MINUS);
     type1 = compileTerm();
-    checkIntType(type1);
+    // checkIntType(type1);
+    check_int_float(type1);
     type2 = compileExpression3();
     if (type2 != NULL)
-      checkIntType(type2);
+      // checkIntType(type2);
+      check_int_float(type2);
     return type1;
     break;
     // check the FOLLOW set
@@ -705,6 +738,8 @@ Type* compileTerm(void) {
   Type* type;
 
   type = compileFactor();
+  if(lookAhead->tokenType == SB_MOD)
+    checkIntType(type);
   compileTerm2();
 
   return type;
@@ -716,16 +751,24 @@ void compileTerm2(void) {
   case SB_TIMES:
     eat(SB_TIMES);
     type = compileFactor();
-    checkIntType(type);
+    // checkIntType(type);
+    check_int_float(type);
     compileTerm2();
     break;
   case SB_SLASH:
     eat(SB_SLASH);
     type = compileFactor();
-    checkIntType(type);
+    // checkIntType(type);
+    check_int_float(type);
     compileTerm2();
     break;
     // check the FOLLOW set
+  case SB_MOD:
+    eat(SB_MOD);
+    type = compileFactor();
+    checkIntType(type);
+    compileTerm2();
+    break;
   case SB_PLUS:
   case SB_MINUS:
   case KW_TO:
@@ -769,11 +812,17 @@ Type* compileFactor(void) {
   case TK_IDENT:
     eat(TK_IDENT);
     // check if the identifier is declared
+    if(lookAhead->tokenType == SB_LPAR)
+      obj = checkDeclaredFunction(currentToken->string);
     obj = checkDeclaredIdent(currentToken->string);
 
     switch (obj->kind) {
     case OBJ_CONSTANT:
-      type = makeIntType();
+      // type = makeIntType();
+      if(obj->constAttrs->value->type == TP_INT)
+        type = makeIntType();
+      if(obj->constAttrs->value->type == TP_FLOAT)
+        type = makeFloatType();
       type->typeClass = obj->constAttrs->value->type;
       break;
     case OBJ_VARIABLE:

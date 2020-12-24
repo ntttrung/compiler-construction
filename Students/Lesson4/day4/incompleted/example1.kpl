@@ -1,3 +1,33 @@
 Program Example1; (* Example 1 *)
+CONST f1 = 3.0;
+      (*f1 = 2;*)
+      (*f2 = f3;*)
+TYPE F = FLOAT;
+    (*t = int;*)
+VAR v1: INTEGER;
+    v2: FLOAT;
+
+PROCEDURE hello(i: integer);
+begin
+    v1 :=  READi;
+    v2 := READf;
+    CALL WRITEC('H');
+    CALL WRITEC('A');
+    CALL WRITEF(3.14);
+    CALL WRITELN;
+end;
+FUNCTION func(i : integer):char;
+    const b = 4;
+    type a = array(. 5 .) of FLOAT;
+    Begin
+    END;
 Begin
+    (*FOR  v10 := 1  TO  4  DO  
+    BEGIN
+      ;
+    END;*)
+    (*CALL P10;*)
+    (*v1 += f10()*);
+    (*v4 += 2;*)
+    call hello(v1,10);
 End. (* Example 1 *)
