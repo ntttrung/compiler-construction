@@ -8,14 +8,14 @@
 #include <stdlib.h>
 #include "error.h"
 
-#define NUM_OF_ERRORS 30
+#define NUM_OF_ERRORS 32
 
 struct ErrorMessage {
   ErrorCode errorCode;
   char *message;
 };
 
-struct ErrorMessage errors[30] = {
+struct ErrorMessage errors[32] = {
   {ERR_END_OF_COMMENT, "End of comment expected."},
   {ERR_IDENT_TOO_LONG, "Identifier too long."},
   {ERR_INVALID_CONSTANT_CHAR, "Invalid char constant."},
@@ -45,7 +45,9 @@ struct ErrorMessage errors[30] = {
   {ERR_DUPLICATE_IDENT, "Duplicate identifier."},
   {ERR_TYPE_INCONSISTENCY, "Type inconsistency"},
   {ERR_PARAMETERS_ARGUMENTS_INCONSISTENCY, "The number of arguments and the number of parameters are inconsistent."},
-  {ERR_FOR_INDEX_FLOAT, "Wrong for's index"}
+  {ERR_FOR_INDEX_FLOAT, "Cannot use real number for for's index"},
+  {ERR_MODULO_OPERATOR, "Cannot use real number for modulo operator"},
+  {ERR_FUNCTION_RETURN, "Missing function return"}
 };
 
 void error(ErrorCode err, int lineNo, int colNo) {

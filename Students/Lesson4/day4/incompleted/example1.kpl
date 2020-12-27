@@ -16,10 +16,14 @@ begin
     CALL WRITEF(3.14);
     CALL WRITELN;
 end;
-FUNCTION func(i : integer):char;
+FUNCTION func(i : integer): char;
     const b = 4;
-    type a = array(. 5 .) of FLOAT;
+    VAR a : array(. 10 .) of FLOAT;
     Begin
+        i *= 2;
+        func := 'a';
+        a(. v1 - 2 .) := 3.1;
+        call WRITELN;
     END;
 Begin
     (*FOR  v10 := 1  TO  4  DO  
@@ -29,5 +33,7 @@ Begin
     (*CALL P10;*)
     (*v1 += f10()*);
     (*v4 += 2;*)
-    call hello(v1,10);
+    (*call hello(v1);*)
+    (*v1 += v1 % 2.2;*)
+    
 End. (* Example 1 *)

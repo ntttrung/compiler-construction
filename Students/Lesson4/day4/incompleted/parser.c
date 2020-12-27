@@ -5,6 +5,7 @@
  */
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "reader.h"
 #include "scanner.h"
@@ -158,14 +159,17 @@ void compileSubDecls(void) {
   }
 }
 
+
 void compileFuncDecl(void) {
   Object* funcObj;
   Type* returnType;
-
+  int count = 0;
   eat(KW_FUNCTION);
   eat(TK_IDENT);
   // TODO: Check if a function identifier is fresh in the block
   checkFreshIdent(currentToken->string);
+  char *name;
+  strcpy(name, currentToken->string);
   // create the function object
   funcObj = createFunctionObject(currentToken->string);
   // declare the function object
@@ -180,11 +184,170 @@ void compileFuncDecl(void) {
   funcObj->funcAttrs->returnType = returnType;
 
   eat(SB_SEMICOLON);
-  compileBlock();
+  compileBlock_f(name);
+  // compileBlock();
+  // printObjectList(symtab->currentScope->objList, 1);
   eat(SB_SEMICOLON);
   // exit the function block
   exitBlock();
 }
+
+////////////////////////////////////
+void compileBlock_f(char* name) {
+  Object* constObj;
+  ConstantValue* constValue;
+
+  if (lookAhead->tokenType == KW_CONST) {
+    eat(KW_CONST);
+
+    do {
+      eat(TK_IDENT);
+      // TODO: Check if a constant identifier is fresh in the block
+      checkFreshIdent(currentToken->string);
+      // Create a constant object
+      constObj = createConstantObject(currentToken->string);
+      
+      eat(SB_EQ);
+      // Get the constant value
+      constValue = compileConstant();
+      constObj->constAttrs->value = constValue;
+      // Declare the constant object 
+      declareObject(constObj);
+      
+      eat(SB_SEMICOLON);
+    } while (lookAhead->tokenType == TK_IDENT);
+
+    compileBlock2_f(name);
+  } 
+  else compileBlock2_f(name);
+}
+
+void compileBlock2_f(char* name) {
+  Object* typeObj;
+  Type* actualType;
+
+  if (lookAhead->tokenType == KW_TYPE) {
+    eat(KW_TYPE);
+
+    do {
+      eat(TK_IDENT);
+      // TODO: Check if a type identifier is fresh in the block
+      checkFreshIdent(currentToken->string);
+      // create a type object
+      typeObj = createTypeObject(currentToken->string);
+      
+      eat(SB_EQ);
+      // Get the actual type
+      actualType = compileType();
+      typeObj->typeAttrs->actualType = actualType;
+      // Declare the type object
+      declareObject(typeObj);
+      
+      eat(SB_SEMICOLON);
+    } while (lookAhead->tokenType == TK_IDENT);
+
+    compileBlock3_f(name);
+  } 
+  else compileBlock3_f(name);
+}
+
+void compileBlock3_f(char* name) {
+  Object* varObj;
+  Type* varType;
+
+  if (lookAhead->tokenType == KW_VAR) {
+    eat(KW_VAR);
+
+    do {
+      eat(TK_IDENT);
+      // TODO: Check if a variable identifier is fresh in the block
+      checkFreshIdent(currentToken->string);
+      // Create a variable object      
+      varObj = createVariableObject(currentToken->string);
+
+      eat(SB_COLON);
+      // Get the variable type
+      varType = compileType();
+      varObj->varAttrs->type = varType;
+      // Declare the variable object
+      declareObject(varObj);
+      
+      eat(SB_SEMICOLON);
+    } while (lookAhead->tokenType == TK_IDENT);
+
+    compileBlock4_f(name);
+  } 
+  else compileBlock4_f(name);
+}
+
+void compileBlock4_f(char* name) {
+  compileSubDecls();
+  compileBlock5_f(name);
+}
+
+void compileBlock5_f(char* name) {
+  eat(KW_BEGIN);
+  compileStatements_f(name);
+  eat(KW_END);
+}
+
+void compileStatements_f(char* name) {
+  int count = 0;
+  int i = 0;
+  i = compileStatement_f(name);
+  count += i;
+  while (lookAhead->tokenType == SB_SEMICOLON) {
+    i = 0;
+    eat(SB_SEMICOLON);
+    i = compileStatement_f(name);
+    count += i;
+  }
+  if (count == 0)
+    error(ERR_FUNCTION_RETURN, lookAhead->lineNo, lookAhead->colNo);
+}
+
+int compileStatement_f(char* name) {
+  Object* obj;
+  int count = 0;
+  switch (lookAhead->tokenType) {
+  case TK_IDENT:
+    if(strcmp(lookAhead->string, name) == 0)
+      {
+        count++;
+        // // obj = checkDeclaredFunction(currentToken->string);
+        // obj = checkDeclaredIdent(currentToken->string);
+        // compileArgument(obj->funcAttrs->paramList);
+      }
+    compileAssignSt();
+    break;
+  case KW_CALL:
+    compileCallSt();
+    break;
+  case KW_BEGIN:
+    compileGroupSt();
+    break;
+  case KW_IF:
+    compileIfSt();
+    break;
+  case KW_WHILE:
+    compileWhileSt();
+    break;
+  case KW_FOR:
+    compileForSt();
+    break;
+    // EmptySt needs to check FOLLOW tokens
+  case SB_SEMICOLON:
+  case KW_END:
+  case KW_ELSE:
+    break;
+    // Error occurs
+  default:
+    error(ERR_INVALID_STATEMENT, lookAhead->lineNo, lookAhead->colNo);
+    break;
+  }
+  return count;
+}
+///////////////////////////////////
 
 void compileProcDecl(void) {
   Object* procObj;
@@ -317,8 +480,8 @@ Type* compileType(void) {
   case KW_ARRAY:
     eat(KW_ARRAY);
     eat(SB_LSEL);
-    if(lookAhead->tokenType != TK_NUMBER)
-      error(ERR_TYPE_INCONSISTENCY, currentToken->lineNo, currentToken->colNo);
+    // if(lookAhead->tokenType != TK_NUMBER)
+    //   error(ERR_TYPE_INCONSISTENCY, currentToken->lineNo, currentToken->colNo);
     eat(TK_NUMBER);
 
     arraySize = currentToken->value.intvalue;
@@ -661,7 +824,7 @@ Type* compileExpression(void) {
     type = compileExpression2();
     if(type->typeClass != TP_INT && type->typeClass !=TP_FLOAT)
       error(ERR_TYPE_INCONSISTENCY, currentToken->lineNo, currentToken->colNo);
-    checkIntType(type);
+    // checkIntType(type);
     break;
   default:
     type = compileExpression2();
@@ -766,7 +929,9 @@ void compileTerm2(void) {
   case SB_MOD:
     eat(SB_MOD);
     type = compileFactor();
-    checkIntType(type);
+    // checkIntType(type);
+    if(type->typeClass != TP_INT)
+      error(ERR_MODULO_OPERATOR, currentToken->lineNo, currentToken->colNo);
     compileTerm2();
     break;
   case SB_PLUS:
@@ -813,7 +978,7 @@ Type* compileFactor(void) {
     eat(TK_IDENT);
     // check if the identifier is declared
     if(lookAhead->tokenType == SB_LPAR)
-      obj = checkDeclaredFunction(currentToken->string);
+    obj = checkDeclaredFunction(currentToken->string);
     obj = checkDeclaredIdent(currentToken->string);
 
     switch (obj->kind) {
@@ -857,7 +1022,6 @@ Type* compileIndexes(Type* arrayT) {
     checkArrayType(arrayT);
     idx = compileExpression();
     checkIntType(idx);
-
     eat(SB_RSEL);
     arrayT = arrayT->elementType;
   }
