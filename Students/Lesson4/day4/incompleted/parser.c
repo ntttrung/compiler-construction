@@ -973,6 +973,11 @@ Type* compileFactor(void) {
     eat(TK_CHAR);
     type = makeCharType();
     break;
+  case SB_LPAR:
+    eat(SB_LPAR);
+    type = compileExpression();
+    eat(SB_RPAR);
+    break;
   case TK_IDENT:
     eat(TK_IDENT);
     // check if the identifier is declared

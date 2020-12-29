@@ -9,7 +9,7 @@ VAR v1: INTEGER;
 
 PROCEDURE hello(i: integer);
 begin
-    v1 :=  READi;
+    v1 := READi;
     v2 := READf;
     CALL WRITEC('H');
     CALL WRITEC('A');
@@ -20,7 +20,7 @@ FUNCTION func(i : integer): char;
     const b = 4;
     VAR a : array(. 10 .) of FLOAT;
     Begin
-        i *= 2;
+        i *= 2 * ( 2 + 2.1);
         func := 'a';
         a(. v1 - 2 .) := 3.1;
         call WRITELN;
