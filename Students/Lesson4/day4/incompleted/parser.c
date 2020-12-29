@@ -1030,6 +1030,7 @@ Type* compileIndexes(Type* arrayT) {
     arrayT = arrayT->elementType;
   }
   elm = arrayT;
+  return elm;
 }
 
 int compile(char *fileName) {

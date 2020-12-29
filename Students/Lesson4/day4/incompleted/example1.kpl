@@ -20,7 +20,7 @@ FUNCTION func(i : integer): char;
     const b = 4;
     VAR a : array(. 10 .) of FLOAT;
     Begin
-        i *= 2 * ( 2 + 2.1);
+        i *= 2 * ( 2 + i);
         func := 'a';
         a(. v1 - 2 .) := 3.1;
         call WRITELN;
