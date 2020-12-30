@@ -168,8 +168,6 @@ void compileFuncDecl(void) {
   eat(TK_IDENT);
   // TODO: Check if a function identifier is fresh in the block
   checkFreshIdent(currentToken->string);
-  char *name;
-  strcpy(name, currentToken->string);
   // create the function object
   funcObj = createFunctionObject(currentToken->string);
   // declare the function object
@@ -184,168 +182,170 @@ void compileFuncDecl(void) {
   funcObj->funcAttrs->returnType = returnType;
 
   eat(SB_SEMICOLON);
-  // compileBlock_f(name);
-  compileBlock();
+  compileBlock_f();
+  // compileBlock();
+  // printObjectList(symtab->currentScope->owner->name, 1);
+  // puts(symtab->currentScope->owner->name);
   eat(SB_SEMICOLON);
   // exit the function block
   exitBlock();
 }
 
 ////////////////////////////////////
-// void compileBlock_f(char* name) {
-//   Object* constObj;
-//   ConstantValue* constValue;
+void compileBlock_f(void) {
+  Object* constObj;
+  ConstantValue* constValue;
 
-//   if (lookAhead->tokenType == KW_CONST) {
-//     eat(KW_CONST);
+  if (lookAhead->tokenType == KW_CONST) {
+    eat(KW_CONST);
 
-//     do {
-//       eat(TK_IDENT);
-//       // TODO: Check if a constant identifier is fresh in the block
-//       checkFreshIdent(currentToken->string);
-//       // Create a constant object
-//       constObj = createConstantObject(currentToken->string);
+    do {
+      eat(TK_IDENT);
+      // TODO: Check if a constant identifier is fresh in the block
+      checkFreshIdent(currentToken->string);
+      // Create a constant object
+      constObj = createConstantObject(currentToken->string);
       
-//       eat(SB_EQ);
-//       // Get the constant value
-//       constValue = compileConstant();
-//       constObj->constAttrs->value = constValue;
-//       // Declare the constant object 
-//       declareObject(constObj);
+      eat(SB_EQ);
+      // Get the constant value
+      constValue = compileConstant();
+      constObj->constAttrs->value = constValue;
+      // Declare the constant object 
+      declareObject(constObj);
       
-//       eat(SB_SEMICOLON);
-//     } while (lookAhead->tokenType == TK_IDENT);
+      eat(SB_SEMICOLON);
+    } while (lookAhead->tokenType == TK_IDENT);
 
-//     compileBlock2_f(name);
-//   } 
-//   else compileBlock2_f(name);
-// }
+    compileBlock2_f();
+  } 
+  else compileBlock2_f();
+}
 
-// void compileBlock2_f(char* name) {
-//   Object* typeObj;
-//   Type* actualType;
+void compileBlock2_f(void) {
+  Object* typeObj;
+  Type* actualType;
 
-//   if (lookAhead->tokenType == KW_TYPE) {
-//     eat(KW_TYPE);
+  if (lookAhead->tokenType == KW_TYPE) {
+    eat(KW_TYPE);
 
-//     do {
-//       eat(TK_IDENT);
-//       // TODO: Check if a type identifier is fresh in the block
-//       checkFreshIdent(currentToken->string);
-//       // create a type object
-//       typeObj = createTypeObject(currentToken->string);
+    do {
+      eat(TK_IDENT);
+      // TODO: Check if a type identifier is fresh in the block
+      checkFreshIdent(currentToken->string);
+      // create a type object
+      typeObj = createTypeObject(currentToken->string);
       
-//       eat(SB_EQ);
-//       // Get the actual type
-//       actualType = compileType();
-//       typeObj->typeAttrs->actualType = actualType;
-//       // Declare the type object
-//       declareObject(typeObj);
+      eat(SB_EQ);
+      // Get the actual type
+      actualType = compileType();
+      typeObj->typeAttrs->actualType = actualType;
+      // Declare the type object
+      declareObject(typeObj);
       
-//       eat(SB_SEMICOLON);
-//     } while (lookAhead->tokenType == TK_IDENT);
+      eat(SB_SEMICOLON);
+    } while (lookAhead->tokenType == TK_IDENT);
 
-//     compileBlock3_f(name);
-//   } 
-//   else compileBlock3_f(name);
-// }
+    compileBlock3_f();
+  } 
+  else compileBlock3_f();
+}
 
-// void compileBlock3_f(char* name) {
-//   Object* varObj;
-//   Type* varType;
+void compileBlock3_f(void) {
+  Object* varObj;
+  Type* varType;
 
-//   if (lookAhead->tokenType == KW_VAR) {
-//     eat(KW_VAR);
+  if (lookAhead->tokenType == KW_VAR) {
+    eat(KW_VAR);
 
-//     do {
-//       eat(TK_IDENT);
-//       // TODO: Check if a variable identifier is fresh in the block
-//       checkFreshIdent(currentToken->string);
-//       // Create a variable object      
-//       varObj = createVariableObject(currentToken->string);
+    do {
+      eat(TK_IDENT);
+      // TODO: Check if a variable identifier is fresh in the block
+      checkFreshIdent(currentToken->string);
+      // Create a variable object      
+      varObj = createVariableObject(currentToken->string);
 
-//       eat(SB_COLON);
-//       // Get the variable type
-//       varType = compileType();
-//       varObj->varAttrs->type = varType;
-//       // Declare the variable object
-//       declareObject(varObj);
+      eat(SB_COLON);
+      // Get the variable type
+      varType = compileType();
+      varObj->varAttrs->type = varType;
+      // Declare the variable object
+      declareObject(varObj);
       
-//       eat(SB_SEMICOLON);
-//     } while (lookAhead->tokenType == TK_IDENT);
+      eat(SB_SEMICOLON);
+    } while (lookAhead->tokenType == TK_IDENT);
 
-//     compileBlock4_f(name);
-//   } 
-//   else compileBlock4_f(name);
-// }
+    compileBlock4_f();
+  } 
+  else compileBlock4_f();
+}
 
-// void compileBlock4_f(char* name) {
-//   compileSubDecls();
-//   compileBlock5_f(name);
-// }
+void compileBlock4_f(void) {
+  compileSubDecls();
+  compileBlock5_f();
+}
 
-// void compileBlock5_f(char* name) {
-//   eat(KW_BEGIN);
-//   compileStatements_f(name);
-//   eat(KW_END);
-// }
+void compileBlock5_f(void) {
+  eat(KW_BEGIN);
+  compileStatements_f();
+  eat(KW_END);
+}
 
-// void compileStatements_f(char* name) {
-//   int count = 0;
-//   int i = 0;
-//   i = compileStatement_f(name);
-//   count += i;
-//   while (lookAhead->tokenType == SB_SEMICOLON) {
-//     i = 0;
-//     eat(SB_SEMICOLON);
-//     i = compileStatement_f(name);
-//     count += i;
-//   }
-//   if (count == 0)
-//     error(ERR_FUNCTION_RETURN, lookAhead->lineNo, lookAhead->colNo);
-// }
+void compileStatements_f() {
+  int count = 0;
+  int i = 0;
+  i = compileStatement_f();
+  count += i;
+  while (lookAhead->tokenType == SB_SEMICOLON) {
+    i = 0;
+    eat(SB_SEMICOLON);
+    i = compileStatement_f();
+    count += i;
+  }
+  if (count == 0)
+    error(ERR_FUNCTION_RETURN, lookAhead->lineNo, lookAhead->colNo);
+}
 
-// int compileStatement_f(char* name) {
-//   Object* obj;
-//   int count = 0;
-//   switch (lookAhead->tokenType) {
-//   case TK_IDENT:
-//     if(strcmp(lookAhead->string, name) == 0)
-//       {
-//         count++;
-//         // // obj = checkDeclaredFunction(currentToken->string);
-//         // obj = checkDeclaredIdent(currentToken->string);
-//         // compileArgument(obj->funcAttrs->paramList);
-//       }
-//     compileAssignSt();
-//     break;
-//   case KW_CALL:
-//     compileCallSt();
-//     break;
-//   case KW_BEGIN:
-//     compileGroupSt();
-//     break;
-//   case KW_IF:
-//     compileIfSt();
-//     break;
-//   case KW_WHILE:
-//     compileWhileSt();
-//     break;
-//   case KW_FOR:
-//     compileForSt();
-//     break;
-//     // EmptySt needs to check FOLLOW tokens
-//   case SB_SEMICOLON:
-//   case KW_END:
-//   case KW_ELSE:
-//     break;
-//     // Error occurs
-//   default:
-//     error(ERR_INVALID_STATEMENT, lookAhead->lineNo, lookAhead->colNo);
-//     break;
-//   }
-//   return count;
-// }
+int compileStatement_f(void) {
+  Object* obj;
+  int count = 0;
+  switch (lookAhead->tokenType) {
+  case TK_IDENT:
+    if(strcmp(lookAhead->string, symtab->currentScope->owner->name) == 0)
+      {
+        count++;
+        // // obj = checkDeclaredFunction(currentToken->string);
+        // obj = checkDeclaredIdent(currentToken->string);
+        // compileArgument(obj->funcAttrs->paramList);
+      }
+    compileAssignSt();
+    break;
+  case KW_CALL:
+    compileCallSt();
+    break;
+  case KW_BEGIN:
+    compileGroupSt();
+    break;
+  case KW_IF:
+    compileIfSt();
+    break;
+  case KW_WHILE:
+    compileWhileSt();
+    break;
+  case KW_FOR:
+    compileForSt();
+    break;
+    // EmptySt needs to check FOLLOW tokens
+  case SB_SEMICOLON:
+  case KW_END:
+  case KW_ELSE:
+    break;
+    // Error occurs
+  default:
+    error(ERR_INVALID_STATEMENT, lookAhead->lineNo, lookAhead->colNo);
+    break;
+  }
+  return count;
+}
 ///////////////////////////////////
 
 void compileProcDecl(void) {
@@ -900,8 +900,8 @@ Type* compileTerm(void) {
   Type* type;
 
   type = compileFactor();
-  if(lookAhead->tokenType == SB_MOD)
-    checkIntType(type);
+  if(lookAhead->tokenType == SB_MOD && type->typeClass != TP_INT)
+    error(ERR_MODULO_OPERATOR, currentToken->lineNo, currentToken->colNo);
   compileTerm2();
 
   return type;
