@@ -184,7 +184,9 @@ void compileFuncDecl(void) {
   funcObj->funcAttrs->returnType = returnType;
 
   eat(SB_SEMICOLON);
- 
+
+  compileBlock();
+
   eat(SB_SEMICOLON);
   // exit the function block
   exitBlock();
@@ -212,12 +214,7 @@ int compileStatement_f(void) {
   switch (lookAhead->tokenType) {
   case TK_IDENT:
     if(strcmp(lookAhead->string, symtab->currentScope->owner->name) == 0)
-      {
         count++;
-        // // obj = checkDeclaredFunction(currentToken->string);
-        // obj = checkDeclaredIdent(currentToken->string);
-        // compileArgument(obj->funcAttrs->paramList);
-      }
     compileAssignSt();
     break;
   case KW_CALL:
