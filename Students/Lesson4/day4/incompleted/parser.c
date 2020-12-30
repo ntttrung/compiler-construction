@@ -147,6 +147,8 @@ void compileBlock4(void) {
 
 void compileBlock5(void) {
   eat(KW_BEGIN);
+  if(symtab->currentScope->owner->kind == OBJ_FUNCTION)
+    compileStatements_f();
   compileStatements();
   eat(KW_END);
 }
@@ -182,114 +184,13 @@ void compileFuncDecl(void) {
   funcObj->funcAttrs->returnType = returnType;
 
   eat(SB_SEMICOLON);
-  compileBlock_f();
-  // compileBlock();
-  // printObjectList(symtab->currentScope->owner->name, 1);
-  // puts(symtab->currentScope->owner->name);
+ 
   eat(SB_SEMICOLON);
   // exit the function block
   exitBlock();
 }
 
 ////////////////////////////////////
-void compileBlock_f(void) {
-  Object* constObj;
-  ConstantValue* constValue;
-
-  if (lookAhead->tokenType == KW_CONST) {
-    eat(KW_CONST);
-
-    do {
-      eat(TK_IDENT);
-      // TODO: Check if a constant identifier is fresh in the block
-      checkFreshIdent(currentToken->string);
-      // Create a constant object
-      constObj = createConstantObject(currentToken->string);
-      
-      eat(SB_EQ);
-      // Get the constant value
-      constValue = compileConstant();
-      constObj->constAttrs->value = constValue;
-      // Declare the constant object 
-      declareObject(constObj);
-      
-      eat(SB_SEMICOLON);
-    } while (lookAhead->tokenType == TK_IDENT);
-
-    compileBlock2_f();
-  } 
-  else compileBlock2_f();
-}
-
-void compileBlock2_f(void) {
-  Object* typeObj;
-  Type* actualType;
-
-  if (lookAhead->tokenType == KW_TYPE) {
-    eat(KW_TYPE);
-
-    do {
-      eat(TK_IDENT);
-      // TODO: Check if a type identifier is fresh in the block
-      checkFreshIdent(currentToken->string);
-      // create a type object
-      typeObj = createTypeObject(currentToken->string);
-      
-      eat(SB_EQ);
-      // Get the actual type
-      actualType = compileType();
-      typeObj->typeAttrs->actualType = actualType;
-      // Declare the type object
-      declareObject(typeObj);
-      
-      eat(SB_SEMICOLON);
-    } while (lookAhead->tokenType == TK_IDENT);
-
-    compileBlock3_f();
-  } 
-  else compileBlock3_f();
-}
-
-void compileBlock3_f(void) {
-  Object* varObj;
-  Type* varType;
-
-  if (lookAhead->tokenType == KW_VAR) {
-    eat(KW_VAR);
-
-    do {
-      eat(TK_IDENT);
-      // TODO: Check if a variable identifier is fresh in the block
-      checkFreshIdent(currentToken->string);
-      // Create a variable object      
-      varObj = createVariableObject(currentToken->string);
-
-      eat(SB_COLON);
-      // Get the variable type
-      varType = compileType();
-      varObj->varAttrs->type = varType;
-      // Declare the variable object
-      declareObject(varObj);
-      
-      eat(SB_SEMICOLON);
-    } while (lookAhead->tokenType == TK_IDENT);
-
-    compileBlock4_f();
-  } 
-  else compileBlock4_f();
-}
-
-void compileBlock4_f(void) {
-  compileSubDecls();
-  compileBlock5_f();
-}
-
-void compileBlock5_f(void) {
-  eat(KW_BEGIN);
-  compileStatements_f();
-  eat(KW_END);
-}
-
 void compileStatements_f() {
   int count = 0;
   int i = 0;
