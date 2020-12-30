@@ -30,6 +30,7 @@ VAR I: INTEGER;
 BEGIN
     S := 0;
     I := 1;
+    SUM := S;
     WHILE I <= N DO
      BEGIN
        S := S + A(.I.);

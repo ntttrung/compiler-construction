@@ -214,7 +214,7 @@ int compileStatement_f(void) {
   switch (lookAhead->tokenType) {
   case TK_IDENT:
     if(strcmp(lookAhead->string, symtab->currentScope->owner->name) == 0)
-        count++;
+        count = 1;
     compileAssignSt();
     break;
   case KW_CALL:
@@ -224,7 +224,7 @@ int compileStatement_f(void) {
     compileGroupSt();
     break;
   case KW_IF:
-    compileIfSt();
+    count = compileIfSt_f();
     break;
   case KW_WHILE:
     compileWhileSt();
@@ -243,6 +243,23 @@ int compileStatement_f(void) {
     break;
   }
   return count;
+}
+
+int compileIfSt_f(void) {
+  int i;
+  eat(KW_IF);
+  compileCondition();
+  eat(KW_THEN);
+  i = compileStatement_f();
+  if (lookAhead->tokenType == KW_ELSE) 
+    i = compileElseSt_f();
+  return i;
+}
+
+int compileElseSt_f(void) {
+  eat(KW_ELSE);
+  int i = compileStatement_f();
+  return i;
 }
 ///////////////////////////////////
 
