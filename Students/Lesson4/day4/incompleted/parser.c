@@ -261,6 +261,8 @@ int compileElseSt_f(void) {
   int i = compileStatement_f();
   return i;
 }
+
+
 ///////////////////////////////////
 
 void compileProcDecl(void) {
@@ -835,7 +837,6 @@ void compileTerm2(void) {
   case SB_SLASH:
     eat(SB_SLASH);
     type = compileFactor();
-    // checkIntType(type);
     check_int_float(type);
     compileTerm2();
     break;
@@ -843,7 +844,6 @@ void compileTerm2(void) {
   case SB_MOD:
     eat(SB_MOD);
     type = compileFactor();
-    // checkIntType(type);
     if(type->typeClass != TP_INT)
       error(ERR_MODULO_OPERATOR, currentToken->lineNo, currentToken->colNo);
     compileTerm2();
@@ -907,6 +907,8 @@ Type* compileFactor(void) {
         type = makeIntType();
       if(obj->constAttrs->value->type == TP_FLOAT)
         type = makeFloatType();
+      if(obj->constAttrs->value->type == TP_CHAR)
+        type = makeCharType();
       type->typeClass = obj->constAttrs->value->type;
       break;
     case OBJ_VARIABLE:

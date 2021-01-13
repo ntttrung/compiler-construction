@@ -23,7 +23,7 @@ FUNCTION func(i : integer): integer;
     Begin
         i *= 2 * ( 2 + i);
         a(. v1 - 2 .) := 3.1;
-        (*If i >= 2 then func := v1;*)
+        If i >= 2 then func := v1;
         call WRITELN;
     END;
 Begin
