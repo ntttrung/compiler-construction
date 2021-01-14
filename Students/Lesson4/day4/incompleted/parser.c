@@ -206,6 +206,7 @@ void compileStatements_f() {
   }
   if (count == 0)
     error(ERR_FUNCTION_RETURN, lookAhead->lineNo, lookAhead->colNo);
+    // printf("WARNING: Missing function return\n");
 }
 
 int compileStatement_f(void) {
